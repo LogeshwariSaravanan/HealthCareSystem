@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.capgemini</groupId>
-	<artifactId>healthcaresystem</artifactId>
+	<artifactId>HealthCareSystem</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>healthcaresystem</name>
 	<description>Demo project for Spring Boot</description>
@@ -42,6 +42,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		
+		<dependency>
+        <groupId>com.fasterxml.uuid</groupId>
+        <artifactId>java-uuid-generator</artifactId>
+        <version>4.0.1</version> <!-- Use the latest version available -->
+    </dependency>
+    
+    
 	</dependencies>
 
 	<build>

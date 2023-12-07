@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +45,7 @@ public class DiagnosticCenter {
 //	private List<Test> test;
 
 
+	 
 	@OneToMany(mappedBy = "diagnosticCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Appointment> appointment;
 	

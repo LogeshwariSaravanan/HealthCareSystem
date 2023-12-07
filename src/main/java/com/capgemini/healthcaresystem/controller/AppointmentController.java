@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.service.AppointmentService;
 
@@ -16,8 +17,8 @@ public class AppointmentController {
 	AppointmentService appointmentService;
 	
 	@PostMapping("/add")
-	public Appointment addAppointment(@RequestBody Appointment appointment) {
-		return appointmentService.addAppointment(appointment);
+	public AppointmentDto addAppointment(@RequestBody AppointmentDto appointmentDto) {
+		return appointmentService.addAppointment(appointmentDto);
 			
 	}
 	

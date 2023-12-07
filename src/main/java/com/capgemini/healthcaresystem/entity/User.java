@@ -3,6 +3,8 @@ package com.capgemini.healthcaresystem.entity;
 import java.math.BigInteger;
 import java.util.List;
 
+import com.fasterxml.uuid.Generators;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -27,13 +29,14 @@ public class User {
 //	 @JoinColumn(name = "userId")
 //	private List<DiagnosticCenter> diagnosticCenter;
 	public User() {
-		super();
+        this.userId = Generators.randomBasedGenerator().generate().toString();
+		
 	}
 
-	public User(String userId, String userName, String userPassword, BigInteger contactNo, String userRole,
+	public User(String userName, String userPassword, BigInteger contactNo, String userRole,
 			String userEmail, int age, String gender) {
 		super();
-		this.userId = userId;
+        this.userId = Generators.randomBasedGenerator().generate().toString();
 		this.userName = userName;
 		this.userPassword = userPassword;
 		this.contactNo = contactNo;

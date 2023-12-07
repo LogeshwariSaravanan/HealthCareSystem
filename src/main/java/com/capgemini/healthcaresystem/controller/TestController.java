@@ -22,7 +22,7 @@ public class TestController {
 @PostMapping("/add")
 public Test addTest(@RequestBody Test test)
    {
-	System.out.println(test.getDiagnosticCenter().getCenterId());
+//	System.out.println(test.getDiagnosticCenter().getCenterId());
 	testService.addTest(test);
 	return test;
 }

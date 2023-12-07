@@ -21,7 +21,7 @@ public class DiagnosticCenterController {
 	
 	@PostMapping("/add")
 	public DiagnosticCenter addCenter(@RequestBody DiagnosticCenter diagnosticCenter) {
-		System.out.println(diagnosticCenter);
+//		System.out.println(diagnosticCenter);
 		 diagnosticCenterService.addCenter(diagnosticCenter);
 		 return diagnosticCenter;
 	}

@@ -3,6 +3,9 @@ package com.capgemini.healthcaresystem.entity;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -23,14 +26,17 @@ public class Appointment {
 	private LocalDateTime dateAndTime;
 	private boolean approved;
 	
+	
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name="TestId")
 	private Test test;
 
+	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id")
     private User user;
 	
+
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="center_id")
 	private DiagnosticCenter diagnosticCenter;
