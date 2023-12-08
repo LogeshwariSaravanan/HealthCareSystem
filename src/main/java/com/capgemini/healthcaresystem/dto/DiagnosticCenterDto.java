@@ -1,6 +1,7 @@
 package com.capgemini.healthcaresystem.dto;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.capgemini.healthcaresystem.entity.Appointment;
@@ -18,6 +19,10 @@ public class DiagnosticCenterDto {
 	private BigInteger contactNo;
 	
 	private String address;
+	
+	private List<TestDto> listOfTest;
+	
+	
 
 	public String getCenterId() {
 		return centerId;
@@ -51,6 +56,17 @@ public class DiagnosticCenterDto {
 		this.address = address;
 	}
 
+	public List<TestDto> getListOfTest() {
+		return listOfTest;
+	}
+
+	public void setListOfTest(List<TestDto> listOfTest) {
+		this.listOfTest = listOfTest;
+	}
+
+	
+
+	
 	
 //	private List<AppointmentDto> appointmentDtos;
 	

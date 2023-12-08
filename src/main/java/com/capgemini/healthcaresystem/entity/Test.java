@@ -1,5 +1,8 @@
 package com.capgemini.healthcaresystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +24,7 @@ public class Test {
 	private String testName;
 	
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	@Transient
 	@ManyToOne(cascade =CascadeType.ALL, fetch = FetchType.LAZY )
 	@JoinColumn(name="center_id", referencedColumnName = "center_id")

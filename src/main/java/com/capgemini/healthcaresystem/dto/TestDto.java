@@ -19,10 +19,25 @@ private String testid;
 	
 //	private DiagnosticCenterDto diagnosticCenterDto;
 
+	public TestDto() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+
+	public TestDto(String testid, String testName) {
+	super();
+	this.testid = testid;
+	this.testName = testName;
+}
+
 
 	public String getTestid() {
 		return testid;
 	}
+
+
+	
 
 
 	public void setTestid(String testid) {
