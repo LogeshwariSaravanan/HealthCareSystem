@@ -102,6 +102,34 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 	}
 
 
+	@Override
+	public boolean deleteCenter(String userId, String diagnosticCenterId) {
+		User user=userRepository.findById(userId).get();
+		if(user.getUserRole().equals("Admin")) {
+			diagnosticCenterRepository.deleteById(diagnosticCenterId);
+			centerTestMappingRepository.deleteCenterTestMappingById(diagnosticCenterId);
+//			centerTestMappingRepository.deleteBycenterId(diagnosticCenterId);
+			return true;
+		}
+		else {
+		return false;
+		}
+	}
+
+
+	@Override
+	public boolean deleteTest(String userId, String diagnosticCenterId, String testId) {
+		User user=userRepository.findById(userId).get();
+		if(user.getUserRole().equals("Admin")) {
+			centerTestMappingRepository.deletebyCenterIdAndTestId(diagnosticCenterId, testId);
+			return true;
+		}
+		else {
+		return false;
+		}
+	}
+
+
 	
 
 

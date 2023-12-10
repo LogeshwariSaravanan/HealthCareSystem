@@ -1,6 +1,7 @@
 package com.capgemini.healthcaresystem.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,9 +26,19 @@ public class DiagnosticCenterController {
 		 
 	}
 	
+	@DeleteMapping("/deletecenter/{userid}/{cid}")
+	public boolean deleteCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId) {
+		return diagnosticCenterService.deleteCenter(userId,diagnosticCenterId);
+	}
+	
 	@PostMapping("/addtest/{userid}/{cid}/{tid}")
-	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String centerId, @PathVariable (value="tid") String testId ) {
-		return diagnosticCenterService.addTest(userId,centerId,testId);
+	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId ) {
+		return diagnosticCenterService.addTest(userId,diagnosticCenterId,testId);
+	}
+	
+	@DeleteMapping("/deletetest/{userid}/{cid}/{tid}")
+	public boolean deleteTest(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId) {
+		return diagnosticCenterService.deleteTest(userId,diagnosticCenterId,testId);
 	}
 	
 
