@@ -19,15 +19,15 @@ public class DiagnosticCenterController {
 	DiagnosticCenterService diagnosticCenterService;
 	
 	
-	@PostMapping("/add")
-	public DiagnosticCenterDto addCenter(@RequestBody DiagnosticCenterDto diagnosticCenterDto) {
-		return diagnosticCenterService.addCenter(diagnosticCenterDto);
+	@PostMapping("/add/{userid}")
+	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter) {
+		return diagnosticCenterService.addCenter(userId,diagnosticCenter);
 		 
 	}
 	
-	@PostMapping("/add/{cid}/{tid}")
-	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="cid") String centerId, @PathVariable (value="tid") String testId ) {
-		return diagnosticCenterService.addTest(centerId,testId);
+	@PostMapping("/addtest/{userid}/{cid}/{tid}")
+	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String centerId, @PathVariable (value="tid") String testId ) {
+		return diagnosticCenterService.addTest(userId,centerId,testId);
 	}
 	
 

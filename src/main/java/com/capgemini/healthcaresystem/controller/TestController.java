@@ -29,13 +29,10 @@ public TestDto addTest(@RequestBody TestDto testDto)
 	return testService.addTest(testDto);
 }
 
-
-
 @GetMapping("/get")
 public List<Test> getTest(){
 	return testService.getTest();
 }
-
 
 @GetMapping("/get/{id}")
 public Test getTestById(@PathVariable String id) throws IdNotFoundException {

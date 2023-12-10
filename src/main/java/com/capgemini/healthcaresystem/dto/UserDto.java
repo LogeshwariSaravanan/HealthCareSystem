@@ -1,6 +1,7 @@
 package com.capgemini.healthcaresystem.dto;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public class UserDto {
 
@@ -12,6 +13,7 @@ public class UserDto {
 	private String userEmail;
 	private int age;
 	private String gender;
+	private List<DiagnosticCenterDto> centerList;
 	public String getUserId() {
 		return userId;
 	}

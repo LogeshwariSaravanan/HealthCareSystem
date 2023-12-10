@@ -36,8 +36,8 @@ public class DiagnosticCenter {
 	
 	
 
-//	@OneToMany(mappedBy = "diagnosticCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//     private List<Test> test;
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     private List<Test> test;
 	
 //	@OneToMany(cascade=CascadeType.ALL)
 //	@Fetch(FetchMode.JOIN)
@@ -50,26 +50,21 @@ public class DiagnosticCenter {
 	private List<Appointment> appointment;
 	
 	
-	
-	
 	public DiagnosticCenter() {
 		super();
 	}
 
 
-
-
-	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address,
+	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address, List<Test> test,
 			List<Appointment> appointment) {
 		super();
 		this.centerId = centerId;
 		this.centerName = centerName;
 		this.contactNo = contactNo;
 		this.address = address;
+		this.test = test;
 		this.appointment = appointment;
 	}
-
-
 
 
 	public String getCenterId() {
@@ -77,13 +72,9 @@ public class DiagnosticCenter {
 	}
 
 
-
-
 	public void setCenterId(String centerId) {
 		this.centerId = centerId;
 	}
-
-
 
 
 	public String getCenterName() {
@@ -91,13 +82,9 @@ public class DiagnosticCenter {
 	}
 
 
-
-
 	public void setCenterName(String centerName) {
 		this.centerName = centerName;
 	}
-
-
 
 
 	public BigInteger getContactNo() {
@@ -105,13 +92,9 @@ public class DiagnosticCenter {
 	}
 
 
-
-
 	public void setContactNo(BigInteger contactNo) {
 		this.contactNo = contactNo;
 	}
-
-
 
 
 	public String getAddress() {
@@ -119,13 +102,19 @@ public class DiagnosticCenter {
 	}
 
 
-
-
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
 
+	public List<Test> getTest() {
+		return test;
+	}
+
+
+	public void setTest(List<Test> test) {
+		this.test = test;
+	}
 
 
 	public List<Appointment> getAppointment() {
@@ -133,21 +122,17 @@ public class DiagnosticCenter {
 	}
 
 
-
-
 	public void setAppointment(List<Appointment> appointment) {
 		this.appointment = appointment;
 	}
 
 
-
-
 	@Override
 	public String toString() {
 		return "DiagnosticCenter [centerId=" + centerId + ", centerName=" + centerName + ", contactNo=" + contactNo
-				+ ", address=" + address + ", appointment=" + appointment + "]";
+				+ ", address=" + address + ", test=" + test + ", appointment=" + appointment + "]";
 	}
-	
+
 
 	
 }

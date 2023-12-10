@@ -12,7 +12,6 @@ public class AppointmentDto {
 	private BigInteger appointmentId;
 	private LocalDateTime dateAndTime;
 	private boolean approved;
-	
 	private TestDto testDto;
 	private UserDto userDto;
 	private DiagnosticCenterDto diagnosticCenterDto;

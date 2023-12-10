@@ -22,7 +22,7 @@ public class DiagnosticCenterDto {
 	
 	private List<TestDto> listOfTest;
 	
-	
+	private List<AppointmentDto> listOfAppointment;
 
 	public String getCenterId() {
 		return centerId;
@@ -64,14 +64,15 @@ public class DiagnosticCenterDto {
 		this.listOfTest = listOfTest;
 	}
 
+	public List<AppointmentDto> getListOfAppointment() {
+		return listOfAppointment;
+	}
+
+	public void setListOfAppointment(List<AppointmentDto> listOfAppointment) {
+		this.listOfAppointment = listOfAppointment;
+	}
+	
 	
 
 	
-	
-//	private List<AppointmentDto> appointmentDtos;
-	
-	
-
-	
-
 }

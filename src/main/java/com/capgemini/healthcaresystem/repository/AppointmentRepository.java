@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.capgemini.healthcaresystem.entity.Appointment;
+import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.entity.User;
 
 import jakarta.transaction.Transactional;
@@ -22,4 +23,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Integ
 	void approveappointment(BigInteger appointment_id);
 	
 	List<Appointment> findByUser(User user);
+	
+	List<Appointment> findByDiagnosticCenter(DiagnosticCenter diagnosticCenter);
+	
 }

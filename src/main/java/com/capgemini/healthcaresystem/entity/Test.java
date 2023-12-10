@@ -24,11 +24,11 @@ public class Test {
 	private String testName;
 	
 	
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@Transient
-	@ManyToOne(cascade =CascadeType.ALL, fetch = FetchType.LAZY )
-	@JoinColumn(name="center_id", referencedColumnName = "center_id")
-	private DiagnosticCenter diagnosticCenter;
+//	@JsonProperty(access = Access.WRITE_ONLY)
+//	@Transient
+//	@ManyToOne(cascade =CascadeType.ALL, fetch = FetchType.LAZY )
+//	@JoinColumn(name="center_id", referencedColumnName = "center_id")
+//	private DiagnosticCenter diagnosticCenter;
 
 
 	public Test() {
@@ -36,50 +36,37 @@ public class Test {
 	}
 
 
-	public Test(String testid, String testName, DiagnosticCenter diagnosticCenter) {
-		super();
-		this.testid = testid;
-		this.testName = testName;
-		this.diagnosticCenter = diagnosticCenter;
-	}
+public Test(String testid, String testName) {
+	super();
+	this.testid = testid;
+	this.testName = testName;
+}
 
 
-	public String getTestid() {
-		return testid;
-	}
+public String getTestid() {
+	return testid;
+}
 
 
-	public void setTestid(String testid) {
-		this.testid = testid;
-	}
+public void setTestid(String testid) {
+	this.testid = testid;
+}
 
 
-	public String getTestName() {
-		return testName;
-	}
+public String getTestName() {
+	return testName;
+}
 
 
-	public void setTestName(String testName) {
-		this.testName = testName;
-	}
+public void setTestName(String testName) {
+	this.testName = testName;
+}
 
 
-	public DiagnosticCenter getDiagnosticCenter() {
-		return diagnosticCenter;
-	}
-
-
-	public void setDiagnosticCenter(DiagnosticCenter diagnosticCenter) {
-		this.diagnosticCenter = diagnosticCenter;
-	}
-
-
-	@Override
-	public String toString() {
-		return "Test [testid=" + testid + ", testName=" + testName + ", diagnosticCenter=" + diagnosticCenter + "]";
-	}
-
-
+@Override
+public String toString() {
+	return "Test [testid=" + testid + ", testName=" + testName + "]";
+}
 	
 	
 
