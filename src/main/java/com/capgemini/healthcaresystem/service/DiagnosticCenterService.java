@@ -31,14 +31,14 @@ public class DiagnosticCenterService {
 	private static List<TestDto> testDtos=new ArrayList();
 	static {
 		testDtos.add(new TestDto("bt","blood Test"));
-		testDtos.add(new TestDto("ut","urine Test"));
 		testDtos.add(new TestDto("st","sugar Test"));
+		testDtos.add(new TestDto("bp","blood pressure"));
 		
 	}
 
 	public DiagnosticCenterDto addCenter(DiagnosticCenterDto diagnosticCenterDto) {
 		
-//		diagnosticCenterDto.setListOfTest(testDtos);
+		diagnosticCenterDto.setListOfTest(testDtos);
 		DiagnosticCenter diagnosticCenter=modelMapper.map(diagnosticCenterDto, DiagnosticCenter.class);
 		diagnosticCenterrepo.save(diagnosticCenter);
 			

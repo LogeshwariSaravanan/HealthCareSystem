@@ -26,7 +26,6 @@ public class TestController {
 @PostMapping("/add")
 public TestDto addTest(@RequestBody TestDto testDto)
    {
-//	System.out.println(test.getDiagnosticCenter().getCenterId());
 	return testService.addTest(testDto);
 }
 

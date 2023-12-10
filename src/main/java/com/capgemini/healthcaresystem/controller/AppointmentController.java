@@ -16,11 +16,6 @@ public class AppointmentController {
 	@Autowired
 	AppointmentService appointmentService;
 	
-	@PostMapping("/add")
-	public AppointmentDto addAppointment(@RequestBody AppointmentDto appointmentDto) {
-		return appointmentService.addAppointment(appointmentDto);
-			
-	}
-	
+
 
 }

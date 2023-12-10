@@ -21,7 +21,6 @@ public class DiagnosticCenterController {
 	
 	@PostMapping("/add")
 	public DiagnosticCenterDto addCenter(@RequestBody DiagnosticCenterDto diagnosticCenterDto) {
-//		System.out.println(diagnosticCenter);
 		return diagnosticCenterService.addCenter(diagnosticCenterDto);
 		 
 	}
@@ -31,10 +30,5 @@ public class DiagnosticCenterController {
 		return diagnosticCenterService.addTest(centerId,testId);
 	}
 	
-//	@GetMapping("/get")
-//	public List<DiagnosticCenter> getAllDiagnosticCenter(){
-//		return diagnosticCenterService.getCenter();
-//		
-//	}
 
 }
