@@ -2,6 +2,7 @@ package com.capgemini.healthcaresystem.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
 import com.capgemini.healthcaresystem.dto.TestDto;
+import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.CenterTestMapping;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.entity.Test;
 import com.capgemini.healthcaresystem.entity.User;
+import com.capgemini.healthcaresystem.exception.InvalidUserException;
+import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
 import com.capgemini.healthcaresystem.repository.DiagnosticCenterRepository;
 import com.capgemini.healthcaresystem.repository.TestRepository;
@@ -34,16 +38,21 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 	
 	private static List<TestDto> testDtos=new ArrayList();
 	static {
-		testDtos.add(new TestDto("bt","blood Test"));
-		testDtos.add(new TestDto("st","sugar Test"));
+		testDtos.add(new TestDto("bt","Blood Test"));
+		testDtos.add(new TestDto("st","Sugar Test"));
 		testDtos.add(new TestDto("bp","Blood Pressure"));
 		
 	}
 	
 	
 	@Override
-	public DiagnosticCenterDto addCenter(String userId, DiagnosticCenter diagnosticCenter) {
-		User user=userRepository.findById(userId).get();
+	public DiagnosticCenterDto addCenter(String userId, DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException {
+		Optional<User> userOptional=userRepository.findById(userId);
+		if(userOptional.isEmpty())
+		{
+			throw new UserNotFoundException("User not found");
+		}
+		User user = userOptional.get();
 		if(user.getUserRole().equals("Admin")) {
 			diagnosticCenterRepository.save(diagnosticCenter);
 			DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
@@ -58,7 +67,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			return diagnosticCenterDto2;
 		}
 		else {
-			return null;
+			throw new InvalidUserException("Admin only add the center");
 		}
 	}
 	
@@ -71,7 +80,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			
 			if(!ListOfTestId.contains(testId)) {
 			
-		 CenterTestMapping centerTestMapping=new CenterTestMapping();
+		    CenterTestMapping centerTestMapping=new CenterTestMapping();
 			centerTestMapping.setTestid(testId);
 			centerTestMapping.setCenterId(centerId);
 			centerTestMappingRepository.save(centerTestMapping);

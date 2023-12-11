@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
 import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
+import com.capgemini.healthcaresystem.exception.InvalidUserException;
+import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.service.DiagnosticCenterService;
 
 @RestController
@@ -21,7 +23,7 @@ public class DiagnosticCenterController {
 	
 	
 	@PostMapping("/add/{userid}")
-	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter) {
+	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter)throws UserNotFoundException,InvalidUserException {
 		return diagnosticCenterService.addCenter(userId,diagnosticCenter);
 		 
 	}
