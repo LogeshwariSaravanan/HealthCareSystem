@@ -79,5 +79,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(IdAlreadyExistException.class)
+	public ResponseEntity<ErrorInfo> handleIdAlreadyExist(IdAlreadyExistException idAlreadyExistException){
+		ErrorInfo errorInfo=new ErrorInfo();
+		errorInfo.setErrorMessage(idAlreadyExistException.getMsg());
+		errorInfo.setHttpStatus(HttpStatus.NOT_FOUND.toString());
+		errorInfo.setLocalDateTime(LocalDateTime.now());
+		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
+	}
+	
 }
 

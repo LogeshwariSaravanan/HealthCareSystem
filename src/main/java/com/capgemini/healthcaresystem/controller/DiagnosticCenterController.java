@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
 import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
+import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
+import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.service.DiagnosticCenterService;
@@ -34,7 +36,7 @@ public class DiagnosticCenterController {
 	}
 	
 	@PostMapping("/addtest/{userid}/{cid}/{tid}")
-	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId ) {
+	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId )throws UserNotFoundException,InvalidUserException ,IdAlreadyExistException, IdNotFoundException{
 		return diagnosticCenterService.addTest(userId,diagnosticCenterId,testId);
 	}
 	

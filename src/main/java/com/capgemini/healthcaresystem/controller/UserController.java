@@ -57,7 +57,7 @@ public class UserController {
 
 
 	@PutMapping("/approveappointment/{userid}/{diagnosticcenterId}")
-	public boolean approveAppointment(@PathVariable (value="userid") String userId, @PathVariable (value="diagnosticcenterId")String diagnosticCenterId ) throws InvalidUserException,IdNotFoundException,UserNotFoundException{
+	public boolean approveAppointment(@PathVariable (value="userid") String userId, @PathVariable (value="diagnosticcenterId")String diagnosticCenterId ) throws InvalidUserException,IdNotFoundException{
 		return userService.approveAppointment(userId,diagnosticCenterId);
 	}
 

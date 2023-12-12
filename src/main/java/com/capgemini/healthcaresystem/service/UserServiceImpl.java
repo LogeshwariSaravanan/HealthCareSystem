@@ -132,12 +132,16 @@ public class UserServiceImpl implements UserService {
 		  appointmentRepository.save(appointment);
 					
 		  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+		  
 		  UserDto userDto=modelMapper.map(user,UserDto.class);
 		  appointmentDto2.setUserDto(userDto);
+		  
 		  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
 		  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
+		  
 		  TestDto testDto=modelMapper.map(test, TestDto.class);
 		  appointmentDto2.setTestDto(testDto);
+		  
 		  return appointmentDto2;
 		  }
 			
@@ -147,11 +151,11 @@ public class UserServiceImpl implements UserService {
 	
 
 	
-	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException, UserNotFoundException {
+	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException{
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
-			throw new UserNotFoundException("User not found");
+			throw new IdNotFoundException("User not found");
 		}
 		User user=userOptional.get();
 		if(user.getUserRole().equals("Admin")) {

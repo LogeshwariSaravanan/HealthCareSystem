@@ -20,7 +20,7 @@ public interface UserService {
 	public List<UserDto> getUser();
 	public AppointmentDto makeAppointment(String userId, String diagnosticCenterid, String testId,LocalDateTime dateAndTime)throws UserNotFoundException,IdNotFoundException;
 
-	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException, UserNotFoundException;
+	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException;
 	
 
 
