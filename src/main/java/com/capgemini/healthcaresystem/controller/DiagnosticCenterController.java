@@ -25,7 +25,7 @@ public class DiagnosticCenterController {
 	
 	
 	@PostMapping("/add/{userid}")
-	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter)throws UserNotFoundException,InvalidUserException {
+	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter)throws UserNotFoundException,InvalidUserException,IdAlreadyExistException {
 		return diagnosticCenterService.addCenter(userId,diagnosticCenter);
 		 
 	}

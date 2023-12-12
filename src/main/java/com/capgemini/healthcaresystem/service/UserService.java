@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
+import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
@@ -18,9 +19,11 @@ import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 public interface UserService {
 	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException;
 	public List<UserDto> getUser();
-	public AppointmentDto makeAppointment(String userId, String diagnosticCenterid, String testId,LocalDateTime dateAndTime)throws UserNotFoundException,IdNotFoundException;
+//	public AppointmentDto makeAppointment(String userId, String diagnosticCenterid, String testId,LocalDateTime dateAndTime)throws UserNotFoundException,IdNotFoundException;
 
 	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException;
+	public String checkUserById(User user) throws IdNotFoundException,InvalidPasswordException;
+	public AppointmentDto makeAppointment(Appointment appointment)throws UserNotFoundException,IdNotFoundException;
 	
 
 

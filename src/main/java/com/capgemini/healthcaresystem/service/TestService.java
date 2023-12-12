@@ -7,10 +7,11 @@ import com.capgemini.healthcaresystem.entity.Test;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 
 public interface TestService {
-	public TestDto addTest(TestDto testDto);
+	public TestDto addTest(String userId,Test test);
 
 	public List<Test> getTest();
 
 	public Test getTestById(String id) throws IdNotFoundException;
+
 
 }

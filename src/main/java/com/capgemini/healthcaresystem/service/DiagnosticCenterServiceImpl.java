@@ -1,6 +1,7 @@
 package com.capgemini.healthcaresystem.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,17 +39,9 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	private static List<TestDto> testDtos=new ArrayList();
-	static {
-		testDtos.add(new TestDto("bt","Blood Test"));
-		testDtos.add(new TestDto("st","Sugar Test"));
-		testDtos.add(new TestDto("bp","Blood Pressure"));
-		
-	}
-	
 	
 	@Override
-	public DiagnosticCenterDto addCenter(String userId, DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException {
+	public DiagnosticCenterDto addCenter(String userId, DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException, IdAlreadyExistException {
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
@@ -56,17 +49,31 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 		}
 		User user = userOptional.get();
 		if(user.getUserRole().equals("Admin")) {
-			diagnosticCenterRepository.save(diagnosticCenter);
-			DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
-			diagnosticCenterDto2.setListOfTest(testDtos);
-			for(int i=0;i<3;i++) {
-				CenterTestMapping centerTestMapping=new CenterTestMapping();
-			    centerTestMapping.setTestid(diagnosticCenterDto2.getListOfTest().get(i).getTestid());
-			    centerTestMapping.setCenterId(diagnosticCenterDto2.getCenterId());
-			    centerTestMappingRepository.save(centerTestMapping);
+			List<String> listOfDiagnosticCenterId=diagnosticCenterRepository.FindListOfCenterId();
+			if(!listOfDiagnosticCenterId.contains(diagnosticCenter.getCenterId())) {
+				diagnosticCenterRepository.save(diagnosticCenter);
+				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
+				List<Test> listOfTest=testRepository.findAll();
+				TestDto[] defaultTestDto=new TestDto[3];
+				for(int i=0;i<3;i++) {
+					TestDto testDto=modelMapper.map(listOfTest.get(i),TestDto.class);
+					defaultTestDto[i]=testDto;
+				}
+				diagnosticCenterDto2.setListOfTest(Arrays.asList(defaultTestDto));
+				for(int i=0;i<3;i++) {
+					
+					CenterTestMapping centerTestMapping=new CenterTestMapping();
+				    centerTestMapping.setTestid(diagnosticCenterDto2.getListOfTest().get(i).getTestid());
+				    centerTestMapping.setCenterId(diagnosticCenterDto2.getCenterId());
+				    centerTestMappingRepository.save(centerTestMapping);
+				}
+				
+				return diagnosticCenterDto2;
 			}
 			
-			return diagnosticCenterDto2;
+			else {
+				throw new IdAlreadyExistException("Center already exist");
+			}
 		}
 		else {
 			throw new InvalidUserException("Admin only add the center");
@@ -74,54 +81,58 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 	}
 	
 	
-	public DiagnosticCenterDto addTest(String userId,String centerId, String testId)throws UserNotFoundException,InvalidUserException,IdAlreadyExistException, IdNotFoundException {
+	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws UserNotFoundException,InvalidUserException,IdAlreadyExistException ,IdNotFoundException {
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
 			throw new UserNotFoundException("User not found");
 		}
 		User user=userRepository.findById(userId).get();
-		if(user.getUserRole().equals("Admin")) {
-			
-			List<String> listOfTestId=centerTestMappingRepository.findTestIdByCenterId(centerId);
-			List<String> listOfTest=testRepository.listOfTestId();
-			if(listOfTest.contains(testId)) {
-				if(!listOfTestId.contains(testId)) {
-					
-				    CenterTestMapping centerTestMapping=new CenterTestMapping();
-					centerTestMapping.setTestid(testId);
-					centerTestMapping.setCenterId(centerId);
-					centerTestMappingRepository.save(centerTestMapping);
-					
-					DiagnosticCenter diagnosticCenter=diagnosticCenterRepository.findById(centerId).get();
-					DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
-					
-				 	List<TestDto> listOfTestDtos=new ArrayList<>();
-				    List<CenterTestMapping> centerTestMappings=	centerTestMappingRepository.findBycenterId(centerId);
-				    for(CenterTestMapping ctm:centerTestMappings) {
-					    Test test=testRepository.findById(ctm.getTestid()).get();
-					    TestDto testDto=modelMapper.map(test,TestDto.class);
-					    listOfTestDtos.add(testDto);
-					    }
-				    diagnosticCenterDto2.setListOfTest(listOfTestDtos);
-				  
-				 	return diagnosticCenterDto2;
-				 	}
-					else {
-						throw new IdAlreadyExistException("Test already exist in this center");
-					}
-			}
-			else {
-				throw new IdNotFoundException("Test not present");
-			}	
-			
-		}
-		else {
-			throw new InvalidUserException("Admin only add the center");
-
-		}
-				
+//	    User user = userRepository.findById(userId).orElse(null);
+ 
+	    if (user.getUserRole().equals("Admin")) {
+	        DiagnosticCenter diagnosticCenter = diagnosticCenterRepository.findById(centerId).orElse(null);
+ 
+	        if (diagnosticCenter != null) {
+	            List<String> listOfTestId = centerTestMappingRepository.findTestIdByCenterId(centerId);
+ 
+	            if (!listOfTestId.contains(testId)) {
+	                CenterTestMapping centerTestMapping = new CenterTestMapping();
+	                centerTestMapping.setTestid(testId);
+	                centerTestMapping.setCenterId(centerId);
+	                centerTestMappingRepository.save(centerTestMapping);
+ 
+	                DiagnosticCenterDto diagnosticCenterDto2 = modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
+ 
+	                List<TestDto> listOfTestDtos = new ArrayList<>();
+	                List<CenterTestMapping> centerTestMappings = centerTestMappingRepository.findBycenterId(centerId);
+ 
+	                for (CenterTestMapping ctm : centerTestMappings) {
+	                    Test test = testRepository.findById(ctm.getTestid()).orElse(null);
+ 
+	                    if (test != null) {
+	                        TestDto testDto = modelMapper.map(test, TestDto.class);
+	                        listOfTestDtos.add(testDto);
+	                    } else {
+	                    	throw new IdNotFoundException("Test Not Found");
+	                        // Handle the case where test is not found (you can throw an exception if needed)
+	                    }
+	                }
+ 
+	                diagnosticCenterDto2.setListOfTest(listOfTestDtos);
+ 
+	                return diagnosticCenterDto2;
+	            } else {
+	                throw new IdAlreadyExistException("Test already exist in center ");
+	            }
+	        } else {
+	            throw new IdNotFoundException("Center Id Not Found");
+	        }
+	    } else {
+	        throw new InvalidUserException("Admin only add the Test");
+	    }
 	}
+	
 
 
 	@Override

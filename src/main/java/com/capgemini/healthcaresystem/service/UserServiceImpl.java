@@ -52,7 +52,26 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	ModelMapper modelMapper;
 
-	
+	@Override
+	public String checkUserById(User user) throws IdNotFoundException, InvalidPasswordException {
+		Optional<User> useroptional=userRepository.findById(user.getUserId());
+		if(useroptional.isEmpty()) {
+			throw new IdNotFoundException("User not found please register");
+		}
+		User user1=useroptional.get();
+		if(user1.getUserPassword().equals(user.getUserPassword())) {
+			if(user1.getUserRole().equals("Admin")) {
+				return "welcome Admin";
+			}
+			else {
+				return "welcome "+user1.getUserName(); 
+			}
+		}
+		else {
+			throw new InvalidPasswordException("Invalid password please try again");
+		}
+		
+	}
 
 	@Override
 	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException{
@@ -102,55 +121,49 @@ public class UserServiceImpl implements UserService {
 		
 	}
 	
-		
+	@Override
+	public AppointmentDto makeAppointment(Appointment appointment) throws UserNotFoundException, IdNotFoundException {
+		Optional<User> userOptional=userRepository.findById(appointment.getUser().getUserId());
+		if(userOptional.isEmpty())
+		{
+			throw new UserNotFoundException("User not found");
+		}
+		      User user = userOptional.get();
+			  appointment.setUser(user);
+			  
+			  Optional<DiagnosticCenter> diagnosticCenterOptional=diagnosticCenterRepository.findById(appointment.getDiagnosticCenter().getCenterId());
+		      if(diagnosticCenterOptional.isEmpty()) {
+		    	  throw new IdNotFoundException("Center not found");
+		      }
+			  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
+			  appointment.setDiagnosticCenter(diagnosticCenter);
+			  
+			  List<String> listOfTest=centerTestMappingRepository.findTestIdByCenterId(appointment.getDiagnosticCenter().getCenterId());
+			  if(!listOfTest.contains(appointment.getTest().getTestid())) {
+				  throw new IdNotFoundException("Test not found in this Center");
+			  }
+			  Test test=testRepository.findById(appointment.getTest().getTestid()).get();
+			  appointment.setTest(test);
+			  appointmentRepository.save(appointment);
+						
+			  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+			  
+			  UserDto userDto=modelMapper.map(user,UserDto.class);
+			  appointmentDto2.setUserDto(userDto);
+			  
+			  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
+			  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
+			  
+			  TestDto testDto=modelMapper.map(test, TestDto.class);
+			  appointmentDto2.setTestDto(testDto);
+			  
+			  return appointmentDto2;
 
-	public AppointmentDto makeAppointment(String userId, String diagnosticCenterid, String testId,LocalDateTime dateAndTime) throws UserNotFoundException, IdNotFoundException {
 		
-		Appointment appointment=new Appointment();
-	Optional<User> userOptional=userRepository.findById(userId);
-	if(userOptional.isEmpty())
-	{
-		throw new UserNotFoundException("User not found");
 	}
-	      User user = userOptional.get();
-		  appointment.setUser(user);
-		  
-		  Optional<DiagnosticCenter> diagnosticCenterOptional=diagnosticCenterRepository.findById(diagnosticCenterid);
-	      if(diagnosticCenterOptional.isEmpty()) {
-	    	  throw new IdNotFoundException("Center not found");
-	      }
-		  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
-		  appointment.setDiagnosticCenter(diagnosticCenter);
-		  
-		  List<String> listOfTest=centerTestMappingRepository.findTestIdByCenterId(diagnosticCenterid);
-		  if(!listOfTest.contains(testId)) {
-			  throw new IdNotFoundException("Test not found in this Center");
-		  }
-		  Test test=testRepository.findById(testId).get();
-		  appointment.setTest(test);
-		  appointment.setDateAndTime(dateAndTime);
-		  appointmentRepository.save(appointment);
-					
-		  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
-		  
-		  UserDto userDto=modelMapper.map(user,UserDto.class);
-		  appointmentDto2.setUserDto(userDto);
-		  
-		  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
-		  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
-		  
-		  TestDto testDto=modelMapper.map(test, TestDto.class);
-		  appointmentDto2.setTestDto(testDto);
-		  
-		  return appointmentDto2;
-		  }
-			
-			
-		
-		
-	
 
-	
+
+	@Override
 	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException{
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
@@ -176,6 +189,11 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+
+	
+
+
+	
 
 	
 

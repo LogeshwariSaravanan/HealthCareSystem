@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
+import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
@@ -44,15 +46,27 @@ public class UserController {
 		return new ResponseEntity<UserDto>(userService.addUser(user), HttpStatus.OK);
 	}
 	
+	
+	@PostMapping("/login")
+	ResponseEntity<String> checkUser(@RequestBody User user) throws IdNotFoundException,InvalidPasswordException{
+		return new ResponseEntity<String>(userService.checkUserById(user),HttpStatus.OK);
+	}
+	
+	
 	@GetMapping("/get")
 	public List<UserDto> getUser(){
 		return userService.getUser();
 	}
 	
 	
-	@PostMapping("/makeappointment/{userid}/{diagnosticcenterid}/{testid}/{dateandtime}")
-	public AppointmentDto makeAppointment(@PathVariable (value="userid") String userId, @PathVariable (value="diagnosticcenterid") String diagnosticCenterid, @PathVariable (value="testid") String testId, @PathVariable (value="dateandtime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateAndTime) throws UserNotFoundException,IdNotFoundException{
-		return userService.makeAppointment(userId, diagnosticCenterid, testId, dateAndTime);
+//	@PostMapping("/makeappointment/{userid}/{diagnosticcenterid}/{testid}/{dateandtime}")
+//	public AppointmentDto makeAppointment(@PathVariable (value="userid") String userId, @PathVariable (value="diagnosticcenterid") String diagnosticCenterid, @PathVariable (value="testid") String testId, @PathVariable (value="dateandtime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime dateAndTime) throws UserNotFoundException,IdNotFoundException{
+//		return userService.makeAppointment(userId, diagnosticCenterid, testId, dateAndTime);
+//	}
+	
+	@PostMapping("/makeappointment")
+	public AppointmentDto makeAppointment(@RequestBody Appointment appointment) throws UserNotFoundException, IdNotFoundException {
+		return userService.makeAppointment(appointment);
 	}
 
 

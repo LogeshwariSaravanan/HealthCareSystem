@@ -18,5 +18,6 @@ public interface TestRepository extends JpaRepository<Test, String> {
 	@Modifying
 	@Query("SELECT t.testid FROM Test t")
 	List<String> listOfTestId();
+	
 
 }

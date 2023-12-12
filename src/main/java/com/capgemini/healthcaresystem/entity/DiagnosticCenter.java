@@ -17,6 +17,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="ListOfDiagnosticCenter")
@@ -36,16 +37,19 @@ public class DiagnosticCenter {
 	
 	
 
+	@Transient
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
      private List<Test> test;
 	
+	
+//	@Transient
 //	@OneToMany(cascade=CascadeType.ALL)
 //	@Fetch(FetchMode.JOIN)
 //	@JoinColumn(name="center_id")
 //	private List<Test> test;
 
 
-	 
+	
 	@OneToMany(mappedBy = "diagnosticCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Appointment> appointment;
 	

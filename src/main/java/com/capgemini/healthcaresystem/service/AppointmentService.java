@@ -40,10 +40,7 @@ public class AppointmentService {
 //		
 //		DiagnosticCenter diagnosticCenter=diagnosticCenterRepository.findById(appointment.getDiagnosticCenter().getCenterId()).get();
 //		appointment.setDiagnosticCenter(diagnosticCenter);
-//		
-		
-		
-		
+	
 //		return  appointmentRepository.save(appointment);
 //	}
 

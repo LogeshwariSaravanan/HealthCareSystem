@@ -9,7 +9,7 @@ import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 
 public interface DiagnosticCenterService {
 
-	public DiagnosticCenterDto addCenter(String userId,DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException;
+	public DiagnosticCenterDto addCenter(String userId,DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException, IdAlreadyExistException;
 
 	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws UserNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException;
 

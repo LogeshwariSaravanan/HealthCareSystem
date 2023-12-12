@@ -23,10 +23,10 @@ public class TestController {
 	TestService testService;
 	
 	
-@PostMapping("/add")
-public TestDto addTest(@RequestBody TestDto testDto)
+@PostMapping("/add/{userid}")
+public TestDto addTest(@PathVariable(value="userid") String userId,@RequestBody Test test)
    {
-	return testService.addTest(testDto);
+	return testService.addTest(userId,test);
 }
 
 @GetMapping("/get")

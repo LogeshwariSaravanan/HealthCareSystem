@@ -24,7 +24,7 @@ public class Appointment {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private BigInteger appointmentId;
 	private LocalDateTime dateAndTime;
-	private boolean approved;
+	private boolean approved=false;
 	
 	
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

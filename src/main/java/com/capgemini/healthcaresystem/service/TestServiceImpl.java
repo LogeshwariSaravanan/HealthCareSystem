@@ -29,10 +29,7 @@ public class TestServiceImpl implements TestService {
 	
 	@Autowired
 	ModelMapper modelMapper;
-
-	public TestDto addTest(TestDto testDto) {
-
-		Test test = modelMapper.map(testDto, Test.class);
+	public TestDto addTest(String userId,Test test) {
 		
 		testRepository.save(test);
 	
