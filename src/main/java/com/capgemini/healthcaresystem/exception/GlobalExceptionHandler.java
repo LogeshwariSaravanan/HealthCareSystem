@@ -60,15 +60,6 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
 	}
 	
-	
-	@ExceptionHandler(UserNotFoundException.class)
-	public ResponseEntity<ErrorInfo> handleUserNotFound(UserNotFoundException userNotFoundException){
-		ErrorInfo errorInfo = new ErrorInfo();
-		errorInfo.setErrorMessage(userNotFoundException.getMsg());
-		errorInfo.setHttpStatus(HttpStatus.NOT_FOUND.toString());
-		errorInfo.setLocalDateTime(LocalDateTime.now());
-		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
-	}
 
 	@ExceptionHandler(InvalidUserException.class)
 	public ResponseEntity<ErrorInfo> handleInvalidUser(InvalidUserException invalidUserException){

@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
+import com.capgemini.healthcaresystem.exception.InvalidUserException;
 
 public interface TestService {
-	public TestDto addTest(String userId,Test test);
+	public TestDto addTest(String userId,Test test) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 
 	public List<Test> getTest();
 

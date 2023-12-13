@@ -1,17 +1,12 @@
 package com.capgemini.healthcaresystem.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
+import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 @Entity
 @Table(name="ListOfTest")
@@ -68,6 +63,22 @@ public String toString() {
 	return "Test [testid=" + testid + ", testName=" + testName + "]";
 }
 	
+
+
+@PrePersist
+public void generateUserId() {
+    if (testid == null || testid.isEmpty()) {
+        // Default prefix (first two letters)
+        String prefix = (String) testName.subSequence(0, 1);
+
+        // Generate a unique part (UUID for uniqueness)
+       // String uniquePart = UUID.randomUUID().toString().substring(1, 3);
+        String uniquePart = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 4);
+
+        // Set the generated ID
+        testid = prefix + uniquePart;
+    }
+}
 	
 
 }

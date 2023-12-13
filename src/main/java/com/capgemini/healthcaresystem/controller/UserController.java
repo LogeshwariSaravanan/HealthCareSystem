@@ -20,13 +20,13 @@ import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.User;
+import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
 import com.capgemini.healthcaresystem.exception.InvalidEmailIdException;
 import com.capgemini.healthcaresystem.exception.InvalidPasswordException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.exception.InvalidUserNameException;
-import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.service.UserService;
 
 @RestController
@@ -41,7 +41,7 @@ public class UserController {
 //	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<UserDto> addUser(@RequestBody User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException
+	public ResponseEntity<UserDto> addUser(@RequestBody User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException, IdAlreadyExistException
 	{
 		return new ResponseEntity<UserDto>(userService.addUser(user), HttpStatus.OK);
 	}
@@ -65,7 +65,7 @@ public class UserController {
 //	}
 	
 	@PostMapping("/makeappointment")
-	public AppointmentDto makeAppointment(@RequestBody Appointment appointment) throws UserNotFoundException, IdNotFoundException {
+	public AppointmentDto makeAppointment(@RequestBody Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
 		return userService.makeAppointment(appointment);
 	}
 

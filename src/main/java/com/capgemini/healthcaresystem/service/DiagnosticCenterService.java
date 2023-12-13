@@ -5,17 +5,16 @@ import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
-import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 
 public interface DiagnosticCenterService {
 
-	public DiagnosticCenterDto addCenter(String userId,DiagnosticCenter diagnosticCenter) throws UserNotFoundException, InvalidUserException, IdAlreadyExistException;
+	public DiagnosticCenterDto addCenter(String userId,DiagnosticCenter diagnosticCenter) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 
-	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws UserNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException;
+	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException;
 
-	public boolean deleteCenter(String userId, String diagnosticCenterId);
+	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException;
 
-	public boolean deleteTest(String userId, String diagnosticCenterId, String testId);
+	public boolean deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException, InvalidUserException;
 	
 	
 	

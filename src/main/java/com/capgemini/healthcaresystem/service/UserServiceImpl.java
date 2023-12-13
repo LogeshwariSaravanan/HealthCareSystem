@@ -18,13 +18,13 @@ import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.entity.Test;
 import com.capgemini.healthcaresystem.entity.User;
+import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
 import com.capgemini.healthcaresystem.exception.InvalidEmailIdException;
 import com.capgemini.healthcaresystem.exception.InvalidPasswordException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.exception.InvalidUserNameException;
-import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.repository.AppointmentRepository;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
 import com.capgemini.healthcaresystem.repository.DiagnosticCenterRepository;
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException{
+	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException,IdAlreadyExistException{
         String userNameRegex = "^[A-Z][a-zA-Z0-9]*$";
         if(user.getUserName().matches(userNameRegex)) {
         	String passwordRegex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,14}$";
@@ -82,10 +82,17 @@ public class UserServiceImpl implements UserService {
         		if(user.getContactNo().toString().length() == 10) {
         			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         			if(user.getUserEmail().matches(emailRegex)) {
-        				userRepository.save(user);
-                		UserDto userDto2=modelMapper.map(user,UserDto.class);
-//                		userDto2.setUserRole(user.getUserRole());
-                		return userDto2;
+        				List<String> ListOfUserId=userRepository.FindUserId();
+        				if(!ListOfUserId.contains(user.getUserId())) {
+        					userRepository.save(user);
+                    		UserDto userDto2=modelMapper.map(user,UserDto.class);
+//                    		userDto2.setUserRole(user.getUserRole());
+                    		return userDto2;
+        				}
+        				else {
+        					throw new IdAlreadyExistException("User Already Exist");
+        				}
+        				
         			}
         			else {
         				throw new InvalidEmailIdException("Not a valid Email");
@@ -122,42 +129,49 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public AppointmentDto makeAppointment(Appointment appointment) throws UserNotFoundException, IdNotFoundException {
+	public AppointmentDto makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
 		Optional<User> userOptional=userRepository.findById(appointment.getUser().getUserId());
 		if(userOptional.isEmpty())
 		{
-			throw new UserNotFoundException("User not found");
+			throw new IdNotFoundException("User not found");
 		}
 		      User user = userOptional.get();
 			  appointment.setUser(user);
 			  
-			  Optional<DiagnosticCenter> diagnosticCenterOptional=diagnosticCenterRepository.findById(appointment.getDiagnosticCenter().getCenterId());
-		      if(diagnosticCenterOptional.isEmpty()) {
-		    	  throw new IdNotFoundException("Center not found");
-		      }
-			  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
-			  appointment.setDiagnosticCenter(diagnosticCenter);
-			  
-			  List<String> listOfTest=centerTestMappingRepository.findTestIdByCenterId(appointment.getDiagnosticCenter().getCenterId());
-			  if(!listOfTest.contains(appointment.getTest().getTestid())) {
-				  throw new IdNotFoundException("Test not found in this Center");
+			  List<User> listOfUser=appointmentRepository.findUser();
+			  if(!listOfUser.contains(appointment.getUser())) {
+				  Optional<DiagnosticCenter> diagnosticCenterOptional=diagnosticCenterRepository.findById(appointment.getDiagnosticCenter().getCenterId());
+			      if(diagnosticCenterOptional.isEmpty()) {
+			    	  throw new IdNotFoundException("Center not found");
+			      }
+				  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
+				  appointment.setDiagnosticCenter(diagnosticCenter);
+				  
+				  List<String> listOfTest=centerTestMappingRepository.findTestIdByCenterId(appointment.getDiagnosticCenter().getCenterId());
+				  if(!listOfTest.contains(appointment.getTest().getTestid())) {
+					  throw new IdNotFoundException("Test not found in this Center");
+				  }
+				  Test test=testRepository.findById(appointment.getTest().getTestid()).get();
+				  appointment.setTest(test);
+				  appointmentRepository.save(appointment);
+							
+				  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+				  
+				  UserDto userDto=modelMapper.map(user,UserDto.class);
+				  appointmentDto2.setUserDto(userDto);
+				  
+				  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
+				  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
+				  
+				  TestDto testDto=modelMapper.map(test, TestDto.class);
+				  appointmentDto2.setTestDto(testDto);
+				  
+				  return appointmentDto2;
 			  }
-			  Test test=testRepository.findById(appointment.getTest().getTestid()).get();
-			  appointment.setTest(test);
-			  appointmentRepository.save(appointment);
-						
-			  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+			  else {
+				  throw new IdAlreadyExistException("One user make only one appointment");
+			  }
 			  
-			  UserDto userDto=modelMapper.map(user,UserDto.class);
-			  appointmentDto2.setUserDto(userDto);
-			  
-			  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
-			  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
-			  
-			  TestDto testDto=modelMapper.map(test, TestDto.class);
-			  appointmentDto2.setTestDto(testDto);
-			  
-			  return appointmentDto2;
 
 		
 	}

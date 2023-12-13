@@ -31,9 +31,5 @@ public interface CenterTestMappingRepository extends JpaRepository<CenterTestMap
 	@Query("DELETE FROM CenterTestMapping c WHERE c.centerId=?1 AND c.testid=?2")
 	void deletebyCenterIdAndTestId(String diagnosticCenterId, String testId);
 	
-//	@Transactional
-//	@Modifying
-//	@Query("SELECT c.tcId FROM CenterTestMapping c WHERE c.centerId=?1 and c.testid=?2")
-//	int findIdByCenterIdAndTestId(String centerId,String testId);
 	
 }

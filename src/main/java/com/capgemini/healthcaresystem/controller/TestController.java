@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
 import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
+import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.service.TestService;
 
 @RestController
@@ -24,7 +26,7 @@ public class TestController {
 	
 	
 @PostMapping("/add/{userid}")
-public TestDto addTest(@PathVariable(value="userid") String userId,@RequestBody Test test)
+public TestDto addTest(@PathVariable(value="userid") String userId,@RequestBody Test test) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException
    {
 	return testService.addTest(userId,test);
 }

@@ -26,4 +26,11 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Integ
 	
 	List<Appointment> findByDiagnosticCenter(DiagnosticCenter diagnosticCenter);
 	
+	
+	
+	@Transactional
+	@Modifying
+	@Query("SELECT a.user FROM Appointment a")
+	List<User> findUser();
+	
 }

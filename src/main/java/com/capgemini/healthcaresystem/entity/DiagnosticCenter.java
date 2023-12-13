@@ -2,6 +2,7 @@ package com.capgemini.healthcaresystem.entity;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.UUID;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
@@ -137,6 +139,15 @@ public class DiagnosticCenter {
 				+ ", address=" + address + ", test=" + test + ", appointment=" + appointment + "]";
 	}
 
+	@PrePersist
+    public void generateUserId() {
+        if (centerId == null || centerId.isEmpty()) {
+            // Default prefix (first two letters)
+            String prefix = (String) centerName.subSequence(0, 3);
+            String uniquePart = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 4);
+            centerId = prefix + uniquePart;
+        }
+    }
 
 	
 }

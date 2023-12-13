@@ -14,7 +14,6 @@ import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
-import com.capgemini.healthcaresystem.exception.UserNotFoundException;
 import com.capgemini.healthcaresystem.service.DiagnosticCenterService;
 
 @RestController
@@ -25,23 +24,23 @@ public class DiagnosticCenterController {
 	
 	
 	@PostMapping("/add/{userid}")
-	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter)throws UserNotFoundException,InvalidUserException,IdAlreadyExistException {
+	public DiagnosticCenterDto addCenter(@PathVariable (value="userid") String userId,@RequestBody DiagnosticCenter diagnosticCenter)throws IdNotFoundException,InvalidUserException,IdAlreadyExistException {
 		return diagnosticCenterService.addCenter(userId,diagnosticCenter);
 		 
 	}
 	
 	@DeleteMapping("/deletecenter/{userid}/{cid}")
-	public boolean deleteCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId) {
+	public boolean deleteCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId) throws IdNotFoundException, InvalidUserException {
 		return diagnosticCenterService.deleteCenter(userId,diagnosticCenterId);
 	}
 	
 	@PostMapping("/addtest/{userid}/{cid}/{tid}")
-	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId )throws UserNotFoundException,InvalidUserException ,IdAlreadyExistException, IdNotFoundException{
+	public DiagnosticCenterDto addTestToCenter(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId )throws IdNotFoundException,InvalidUserException ,IdAlreadyExistException, IdNotFoundException{
 		return diagnosticCenterService.addTest(userId,diagnosticCenterId,testId);
 	}
 	
 	@DeleteMapping("/deletetest/{userid}/{cid}/{tid}")
-	public boolean deleteTest(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId) {
+	public boolean deleteTest(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId) throws IdNotFoundException, InvalidUserException {
 		return diagnosticCenterService.deleteTest(userId,diagnosticCenterId,testId);
 	}
 	
