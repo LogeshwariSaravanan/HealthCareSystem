@@ -15,7 +15,7 @@ public class Test {
 	@Column(name="test_id")
 	private String testid;
 	
-	@Column(name="Test_Name")
+	@Column(name="Test_Name",unique = true)
 	private String testName;
 	
 	

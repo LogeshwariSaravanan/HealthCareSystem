@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,8 +49,8 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 		}
 		User user = userOptional.get();
 		if(user.getUserRole().equals("Admin")) {
-			List<String> listOfDiagnosticCenterId=diagnosticCenterRepository.FindListOfCenterId();
-			if(!listOfDiagnosticCenterId.contains(diagnosticCenter.getCenterId())) {
+			List<BigInteger> listOfCenterContactNo=diagnosticCenterRepository.findAllCenterByContactNo();
+			if(!listOfCenterContactNo.contains(diagnosticCenter.getContactNo())) {
 				diagnosticCenterRepository.save(diagnosticCenter);
 				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
 				List<Test> listOfTest=testRepository.findAll();
@@ -119,7 +120,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			}
 			else {
 				List<String> listOfTestId=centerTestMappingRepository.findTestIdByCenterId(centerId);
-				List<String> listOfTest=testRepository.listOfTestId();
+				List<String> listOfTest=testRepository.findAllByTestId();
 				if(listOfTest.contains(testId)) {
 					if(!listOfTestId.contains(testId)) {
 					    CenterTestMapping centerTestMapping=new CenterTestMapping();

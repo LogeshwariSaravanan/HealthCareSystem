@@ -51,9 +51,47 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Override
+	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException,IdAlreadyExistException{
+        String userNameRegex = "^[A-Z][a-zA-Z0-9]*$";
+        if(user.getUserName().matches(userNameRegex)) {
+        	String passwordRegex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,14}$";
+        	if(user.getUserPassword().matches(passwordRegex)) {
+        		if(user.getContactNo().toString().length() == 10) {
+        			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        			if(user.getUserEmail().matches(emailRegex)) {
+        				List<BigInteger> ListOfUserContactNo=userRepository.FindAllUserByContactNo();
+        				if(!ListOfUserContactNo.contains(user.getContactNo())) {
+        					userRepository.save(user);
+                    		UserDto userDto2=modelMapper.map(user,UserDto.class);
+                    		return userDto2;
+        				}
+        				else {
+        					throw new IdAlreadyExistException("User Already Exist");
+        				}
+        			}
+        			else {
+        				throw new InvalidEmailIdException("Not a valid Email");
+        			}
+        		}
+        		else {
+        			throw new InvalidContactNumberException(" Not a valid ContactNumber");
+        			}
+        		}
+        	else {
+        		throw new InvalidPasswordException("Not valid password");
+    		}
+        }
+		else {
+		  throw new InvalidUserNameException("Not a valid name");
+		}
+		
+	}
+
 
 	@Override
-	public String checkUserById(User user) throws IdNotFoundException, InvalidPasswordException {
+	public String login(User user) throws IdNotFoundException, InvalidPasswordException {
 		Optional<User> useroptional=userRepository.findById(user.getUserId());
 		if(useroptional.isEmpty()) {
 			throw new IdNotFoundException("User not found please register");
@@ -72,48 +110,9 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
-
+	
+	
 	@Override
-	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException,IdAlreadyExistException{
-        String userNameRegex = "^[A-Z][a-zA-Z0-9]*$";
-        if(user.getUserName().matches(userNameRegex)) {
-        	String passwordRegex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,14}$";
-        	if(user.getUserPassword().matches(passwordRegex)) {
-        		if(user.getContactNo().toString().length() == 10) {
-        			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        			if(user.getUserEmail().matches(emailRegex)) {
-        				List<String> ListOfUserId=userRepository.FindUserId();
-        				if(!ListOfUserId.contains(user.getUserId())) {
-        					userRepository.save(user);
-                    		UserDto userDto2=modelMapper.map(user,UserDto.class);
-//                    		userDto2.setUserRole(user.getUserRole());
-                    		return userDto2;
-        				}
-        				else {
-        					throw new IdAlreadyExistException("User Already Exist");
-        				}
-        				
-        			}
-        			else {
-        				throw new InvalidEmailIdException("Not a valid Email");
-        			}
-        		}
-        		else {
-        			throw new InvalidContactNumberException(" Not a valid ContactNumber");
-        		}
-        		}
-        	else {
-        		throw new InvalidPasswordException("Not valid password");
-    		}
-        }
-		else {
-		  throw new InvalidUserNameException("Not a valid name");
-		}
-		
-	}
-	
-	
-	
 	public List<UserDto> getUser() {
 		// TODO Auto-generated method stub
 		List<User> listOfUser=userRepository.findAll();
@@ -127,6 +126,7 @@ public class UserServiceImpl implements UserService {
 		return listOfUserDto;
 		
 	}
+	
 	
 	@Override
 	public AppointmentDto makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
@@ -203,6 +203,34 @@ public class UserServiceImpl implements UserService {
 		}
 		
 	}
+
+
+	@Override
+	public String checkStatus(int appointmentId) throws IdNotFoundException {
+		if(appointmentRepository.existsById(appointmentId)) {
+			Appointment appointment=appointmentRepository.findById(appointmentId).get();
+			if(appointment.isApproved()==true) {
+				return "Appointment id : "+appointmentId+"\nAppointment Status : Approved";
+			}
+			else {
+				return "Appointment id : "+appointmentId+"\nAppointment Status : Pending";
+			}
+		}
+		throw new IdNotFoundException("Appointment not Found");
+	}
+
+
+	@Override
+	public String cancelAppointment(int appointmentId) throws IdNotFoundException {
+		if(appointmentRepository.existsById(appointmentId)) {
+			appointmentRepository.deleteById(appointmentId);
+			return "Appointment id : "+appointmentId+" deleted successfully";
+				}
+		throw new IdNotFoundException("Appointment not Found");
+	}
+
+
+	
 
 	
 

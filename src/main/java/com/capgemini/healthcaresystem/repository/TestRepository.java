@@ -16,8 +16,14 @@ public interface TestRepository extends JpaRepository<Test, String> {
 	
 	@Transactional
 	@Modifying
+	@Query("SELECT t.testName FROM Test t")
+	List<String> findTest();
+	
+	
+	@Transactional
+	@Modifying
 	@Query("SELECT t.testid FROM Test t")
-	List<String> listOfTestId();
+	List<String> findAllByTestId();
 	
 
 }

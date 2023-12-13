@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem.repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +17,10 @@ public interface DiagnosticCenterRepository extends JpaRepository<DiagnosticCent
 
 	@Transactional
 	@Modifying
-	@Query("SELECT d.centerId FROM DiagnosticCenter d")
-	List<String> FindListOfCenterId();
+	@Query("SELECT d.contactNo FROM DiagnosticCenter d")
+	List<BigInteger> findAllCenterByContactNo();
+	
+	
 
 
 }

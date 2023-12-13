@@ -15,5 +15,7 @@ public interface TestService {
 
 	public Test getTestById(String id) throws IdNotFoundException;
 
+	public String deleteTest(String testId) throws IdNotFoundException;
+
 
 }

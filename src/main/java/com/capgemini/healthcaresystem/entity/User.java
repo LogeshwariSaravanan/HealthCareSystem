@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.fasterxml.uuid.Generators;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -21,6 +22,7 @@ public class User {
 	private String userId;
 	private String userName;
 	private String userPassword;
+	@Column(unique = true)
 	private BigInteger contactNo;
 	private String userRole="Customer";
 	private String userEmail;
@@ -101,25 +103,6 @@ public class User {
 //	 @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 //	 @JoinColumn(name = "userId")
 //	private List<DiagnosticCenter> diagnosticCenter;
-//	public User() {
-//        this.userId = Generators.randomBasedGenerator().generate().toString();
-		
-//	}
-
-//	public User(String userName, String userPassword, BigInteger contactNo, String userRole,
-//			String userEmail, int age, String gender) {
-//		super();
-//        this.userId = Generators.randomBasedGenerator().generate().toString();
-//		this.userName = userName;
-//		this.userPassword = userPassword;
-//		this.contactNo = contactNo;
-//		this.userRole = userRole;
-//		this.userEmail = userEmail;
-//		this.age = age;
-//		this.gender = gender;
-//	}
-
-	
 	
 	@PrePersist
     public void generateUserId() {

@@ -33,4 +33,5 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Integ
 	@Query("SELECT a.user FROM Appointment a")
 	List<User> findUser();
 	
+	
 }

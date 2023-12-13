@@ -31,10 +31,10 @@ public class DiagnosticCenter {
 	@Column(name="center_name")
 	private String centerName;
 	
-	@Column(name="contact_no")
+	@Column(name="contact_no",unique = true,nullable = false)
 	private BigInteger contactNo;
 	
-	@Column(name="address")
+	@Column(name="address",unique = true)
 	private String address;
 	
 	

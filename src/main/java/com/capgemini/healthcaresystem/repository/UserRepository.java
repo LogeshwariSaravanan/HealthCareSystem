@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem.repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, String>{
 
 	@Transactional
 	@Modifying
-	@Query("SELECT u.userId FROM User u")
-	List<String> FindUserId();
+	@Query("SELECT u.contactNo FROM User u")
+	List<BigInteger> FindAllUserByContactNo();
 }

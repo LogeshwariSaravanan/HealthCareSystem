@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.TestDto;
+import com.capgemini.healthcaresystem.entity.CenterTestMapping;
 import com.capgemini.healthcaresystem.entity.Test;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
@@ -43,8 +44,8 @@ public class TestServiceImpl implements TestService {
 			  throw new IdNotFoundException("user not found");
 		 User user=optionalUser.get();
 		  if(user.getUserRole().equals("Admin")) {
-			  List<String> listOfTest=testRepository.listOfTestId();
-			  if(!listOfTest.contains(test.getTestid())) {
+			  List<String> listOfTestName=testRepository.findTest();
+			  if(!listOfTestName.contains(test.getTestName())) {
 				  testRepository.save(test);
 				  TestDto testDto2 = modelMapper.map(test, TestDto.class);
 				  return testDto2;
@@ -71,6 +72,19 @@ public class TestServiceImpl implements TestService {
 			  throw new IdNotFoundException("no id present to get the test");
 		 
 		 return optionalTest.get();
+	}
+
+	@Override
+	public String deleteTest(String testId) throws IdNotFoundException {
+		if(testRepository.existsById(testId)) {
+			testRepository.deleteById(testId);
+			List<CenterTestMapping> listOfCenterTestMapping=centerTestMappingRepository.findBytestid(testId);
+			for(CenterTestMapping ctm:listOfCenterTestMapping) {
+				centerTestMappingRepository.deleteById(ctm.getTcId());
+			}
+			return "test id : "+testId+" deleted successfully";
+		}
+		throw new IdNotFoundException("Test not Found");
 	}
 
 
