@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
-import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;

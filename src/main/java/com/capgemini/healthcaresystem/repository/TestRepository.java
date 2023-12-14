@@ -7,22 +7,22 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.entity.Tests;
 
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface TestRepository extends JpaRepository<Test, String> {
+public interface TestRepository extends JpaRepository<Tests, String> {
 	
 	@Transactional
 	@Modifying
-	@Query("SELECT t.testName FROM Test t")
+	@Query("SELECT t.testName FROM Tests t")
 	List<String> findTest();
 	
 	
 	@Transactional
 	@Modifying
-	@Query("SELECT t.testid FROM Test t")
+	@Query("SELECT t.testid FROM Tests t")
 	List<String> findAllByTestId();
 	
 

@@ -15,7 +15,7 @@ import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.CenterTestMapping;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
-import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.entity.Tests;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
@@ -53,7 +53,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			if(!listOfCenterContactNo.contains(diagnosticCenter.getContactNo())) {
 				diagnosticCenterRepository.save(diagnosticCenter);
 				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
-				List<Test> listOfTest=testRepository.findAll();
+				List<Tests> listOfTest=testRepository.findAll();
 				TestDto[] defaultTestDto=new TestDto[3];
 				for(int i=0;i<3;i++) {
 					TestDto testDto=modelMapper.map(listOfTest.get(i),TestDto.class);
@@ -63,7 +63,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 				for(int i=0;i<3;i++) {
 					
 					CenterTestMapping centerTestMapping=new CenterTestMapping();
-				    centerTestMapping.setTestid(diagnosticCenterDto2.getListOfTest().get(i).getTestid());
+				    centerTestMapping.setTestid(diagnosticCenterDto2.getListOfTest().get(i).getTestId());
 				    centerTestMapping.setCenterId(diagnosticCenterDto2.getCenterId());
 				    centerTestMappingRepository.save(centerTestMapping);
 				}
@@ -132,7 +132,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 					 	List<TestDto> listOfTestDtos=new ArrayList<>();
 					    List<CenterTestMapping> centerTestMappings=	centerTestMappingRepository.findBycenterId(centerId);
 					    for(CenterTestMapping ctm:centerTestMappings) {
-						    Test test=testRepository.findById(ctm.getTestid()).get();
+						    Tests test=testRepository.findById(ctm.getTestid()).get();
 						    TestDto testDto=modelMapper.map(test,TestDto.class);
 						    listOfTestDtos.add(testDto);
 						    }

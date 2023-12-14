@@ -1,17 +1,10 @@
 package com.capgemini.healthcaresystem.entity;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.UUID;
-
-import com.fasterxml.uuid.Generators;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -30,7 +23,6 @@ public class User {
 	private String gender;
 	public User() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public User(String userId, String userName, String userPassword, BigInteger contactNo, String userRole,
 			String userEmail, int age, String gender) {
@@ -99,25 +91,12 @@ public class User {
 				+ gender + "]";
 	}
 	
-	
-//	 @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-//	 @JoinColumn(name = "userId")
-//	private List<DiagnosticCenter> diagnosticCenter;
-	
 	@PrePersist
     public void generateUserId() {
         if (userId == null || userId.isEmpty()) {
-            // Default prefix (first two letters)
             String prefix = (String) userName.subSequence(0, 3);
-
-            // Generate a unique part (UUID for uniqueness)
-           // String uniquePart = UUID.randomUUID().toString().substring(1, 3);
             String uniquePart = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 4);
-
-            // Set the generated ID
             userId = prefix + uniquePart;
+            }
         }
-    }
-	
-
-}
+	}

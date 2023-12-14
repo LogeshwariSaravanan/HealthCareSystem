@@ -1,7 +1,6 @@
 package com.capgemini.healthcaresystem.service;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +15,7 @@ import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
-import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.entity.Tests;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
@@ -151,7 +150,7 @@ public class UserServiceImpl implements UserService {
 				  if(!listOfTest.contains(appointment.getTest().getTestid())) {
 					  throw new IdNotFoundException("Test not found in this Center");
 				  }
-				  Test test=testRepository.findById(appointment.getTest().getTestid()).get();
+				  Tests test=testRepository.findById(appointment.getTest().getTestid()).get();
 				  appointment.setTest(test);
 				  appointmentRepository.save(appointment);
 							
@@ -178,7 +177,7 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException{
+	public String approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException{
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
@@ -192,10 +191,15 @@ public class UserServiceImpl implements UserService {
 			}
 			DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 			List<Appointment> listOfAppointment=appointmentRepository.findByDiagnosticCenter(diagnosticCenter);
-			for(Appointment appointment:listOfAppointment) {
-				appointmentRepository.approveappointment(appointment.getAppointmentId());
+			if(listOfAppointment.isEmpty()) {
+				return "no appointments to approve in center "+diagnosticCenterId;
 			}
-			return true;
+			else {
+				for(Appointment appointment:listOfAppointment) {
+					appointmentRepository.approveappointment(appointment.getAppointmentId());
+				}
+				return "All appointments are approved in the center "+diagnosticCenterId;
+			}
 		}
 		else {
 			
@@ -224,7 +228,7 @@ public class UserServiceImpl implements UserService {
 	public String cancelAppointment(int appointmentId) throws IdNotFoundException {
 		if(appointmentRepository.existsById(appointmentId)) {
 			appointmentRepository.deleteById(appointmentId);
-			return "Appointment id : "+appointmentId+" deleted successfully";
+			return "Appointment id : "+appointmentId+" cancelled successfully";
 				}
 		throw new IdNotFoundException("Appointment not Found");
 	}

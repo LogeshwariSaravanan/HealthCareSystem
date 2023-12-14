@@ -18,7 +18,6 @@ public class GlobalExceptionHandler {
 		errorInfo.setErrorMessage(idNotFoundException.getMsg());
 		errorInfo.setHttpStatus(HttpStatus.NOT_FOUND.toString());
 		errorInfo.setLocalDateTime(LocalDateTime.now());
-		
 		return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NOT_FOUND);
 	}
 	

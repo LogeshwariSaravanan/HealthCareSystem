@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem.exception;
 
+@SuppressWarnings("serial")
 public class InvalidUserNameException extends Exception {
 
 	String msg;

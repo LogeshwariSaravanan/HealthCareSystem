@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem.exception;
 
+@SuppressWarnings("serial")
 public class IdNotFoundException extends Exception{
 
 	String msg;

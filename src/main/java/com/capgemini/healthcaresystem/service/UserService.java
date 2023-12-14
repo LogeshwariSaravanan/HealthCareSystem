@@ -1,6 +1,5 @@
 package com.capgemini.healthcaresystem.service;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import com.capgemini.healthcaresystem.dto.AppointmentDto;
@@ -20,7 +19,7 @@ public interface UserService {
 	public String login(User user) throws IdNotFoundException,InvalidPasswordException;
 	public List<UserDto> getUser();
 	public AppointmentDto makeAppointment(Appointment appointment)throws IdNotFoundException,IdNotFoundException, IdAlreadyExistException;
-	public boolean approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException;
+	public String approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException;
 	public String checkStatus(int appointmentId)throws IdNotFoundException;
 	public String cancelAppointment(int appointmentId) throws IdNotFoundException;
 

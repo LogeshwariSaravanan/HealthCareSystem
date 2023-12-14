@@ -2,10 +2,6 @@ package com.capgemini.healthcaresystem.entity;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,7 +25,7 @@ public class Appointment {
 	
 	@ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	@JoinColumn(name="TestId")
-	private Test test;
+	private Tests test;
 
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -45,7 +41,7 @@ public class Appointment {
 		super();
 	}
 
-	public Appointment(BigInteger appointmentId, LocalDateTime dateAndTime, boolean approved, Test test, User user,
+	public Appointment(BigInteger appointmentId, LocalDateTime dateAndTime, boolean approved, Tests test, User user,
 			DiagnosticCenter diagnosticCenter) {
 		super();
 		this.appointmentId = appointmentId;
@@ -80,11 +76,11 @@ public class Appointment {
 		this.approved = approved;
 	}
 
-	public Test getTest() {
+	public Tests getTest() {
 		return test;
 	}
 
-	public void setTest(Test test) {
+	public void setTest(Tests test) {
 		this.test = test;
 	}
 

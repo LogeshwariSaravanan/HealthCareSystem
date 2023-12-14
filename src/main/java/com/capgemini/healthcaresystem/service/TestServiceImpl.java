@@ -1,6 +1,5 @@
 package com.capgemini.healthcaresystem.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.entity.CenterTestMapping;
-import com.capgemini.healthcaresystem.entity.Test;
+import com.capgemini.healthcaresystem.entity.Tests;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
@@ -37,7 +36,7 @@ public class TestServiceImpl implements TestService {
 	
 	@Autowired
 	ModelMapper modelMapper;
-	public TestDto addTest(String userId,Test test)throws InvalidUserException,IdAlreadyExistException, IdNotFoundException {
+	public TestDto addTest(String userId,Tests test)throws InvalidUserException,IdAlreadyExistException, IdNotFoundException {
 		
 		Optional<User> optionalUser = userRepository.findById(userId);
 		  if(optionalUser.isEmpty())
@@ -60,14 +59,18 @@ public class TestServiceImpl implements TestService {
 		  }
 	}
 	
-	public List<Test> getTest(){
-		return testRepository.findAll();
+	public List<Tests> getTest(){
+		
+		List<Tests> tests = testRepository.findAll();
+		System.out.println(tests);
+		
+		return tests;
 	}
 
 	
-	public Test getTestById(String id) throws IdNotFoundException
+	public Tests getTestById(String id) throws IdNotFoundException
 	{
-		  Optional<Test> optionalTest = testRepository.findById(id);
+		  Optional<Tests> optionalTest = testRepository.findById(id);
 		  if(optionalTest.isEmpty())
 			  throw new IdNotFoundException("no id present to get the test");
 		 

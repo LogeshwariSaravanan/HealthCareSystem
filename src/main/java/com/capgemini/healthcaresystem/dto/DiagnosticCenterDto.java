@@ -1,28 +1,15 @@
 package com.capgemini.healthcaresystem.dto;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.capgemini.healthcaresystem.entity.Appointment;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 
 public class DiagnosticCenterDto {
     private String centerId;
-	
 	private String centerName;
-	
 	private BigInteger contactNo;
-	
 	private String address;
-	
 	private List<TestDto> listOfTest;
 	
-
 	public String getCenterId() {
 		return centerId;
 	}
