@@ -146,26 +146,27 @@ public class UserServiceImpl implements UserService {
 				  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 				  appointment.setDiagnosticCenter(diagnosticCenter);
 				  
-				  List<String> listOfTest=centerTestMappingRepository.findTestIdByCenterId(appointment.getDiagnosticCenter().getCenterId());
-				  if(!listOfTest.contains(appointment.getTest().getTestid())) {
-					  throw new IdNotFoundException("Test not found in this Center");
-				  }
+				  List<Tests> listOfTest=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
 				  Tests test=testRepository.findById(appointment.getTest().getTestid()).get();
 				  appointment.setTest(test);
-				  appointmentRepository.save(appointment);
-							
-				  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+				  if(listOfTest.contains(appointment.getTest())) {
+					  appointmentRepository.save(appointment);
+								
+					  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+					  
+					  UserDto userDto=modelMapper.map(user,UserDto.class);
+					  appointmentDto2.setUserDto(userDto);
+					  
+					  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
+					  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
+					  
+					  TestDto testDto=modelMapper.map(test, TestDto.class);
+					  appointmentDto2.setTestDto(testDto);
+					  
+					  return appointmentDto2;
+				  }
+				  throw new IdNotFoundException("Test not found in this Center");
 				  
-				  UserDto userDto=modelMapper.map(user,UserDto.class);
-				  appointmentDto2.setUserDto(userDto);
-				  
-				  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
-				  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
-				  
-				  TestDto testDto=modelMapper.map(test, TestDto.class);
-				  appointmentDto2.setTestDto(testDto);
-				  
-				  return appointmentDto2;
 			  }
 			  else {
 				  throw new IdAlreadyExistException("One user make only one appointment");

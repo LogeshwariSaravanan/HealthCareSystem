@@ -30,55 +30,33 @@ public class DiagnosticCenter {
 	@Column(name="address",unique = true)
 	private String address;
 	
-	@Transient
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     private List<Tests> test;
-
-	@OneToMany(mappedBy = "diagnosticCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Appointment> appointment;
-	
 	public DiagnosticCenter() {
 		super();
 	}
 
 	
-	
-	
-	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address,
-			List<Tests> test) {
+	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address) {
 		super();
 		this.centerId = centerId;
 		this.centerName = centerName;
 		this.contactNo = contactNo;
 		this.address = address;
-		this.test = test;
-	}
-
-
-
-
-	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address, List<Tests> test,
-			List<Appointment> appointment) {
-		super();
-		this.centerId = centerId;
-		this.centerName = centerName;
-		this.contactNo = contactNo;
-		this.address = address;
-		this.test = test;
-		this.appointment = appointment;
 	}
 
 	public String getCenterId() {
 		return centerId;
 	}
 
+
 	public void setCenterId(String centerId) {
 		this.centerId = centerId;
 	}
 
+
 	public String getCenterName() {
 		return centerName;
 	}
+
 
 	public void setCenterName(String centerName) {
 		this.centerName = centerName;
@@ -89,48 +67,43 @@ public class DiagnosticCenter {
 		return contactNo;
 	}
 
+
 	public void setContactNo(BigInteger contactNo) {
 		this.contactNo = contactNo;
 	}
+
 
 	public String getAddress() {
 		return address;
 	}
 
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	public List<Tests> getTest() {
-		return test;
-	}
-
-	public void setTest(List<Tests> test) {
-		this.test = test;
-	}
-
-	public List<Appointment> getAppointment() {
-		return appointment;
-	}
-
-	public void setAppointment(List<Appointment> appointment) {
-		this.appointment = appointment;
-	}
+	
 
 	@Override
 	public String toString() {
 		return "DiagnosticCenter [centerId=" + centerId + ", centerName=" + centerName + ", contactNo=" + contactNo
-				+ ", address=" + address + ", test=" + test + ", appointment=" + appointment + "]";
+				+ ", address=" + address + "]";
 	}
 
-	@PrePersist
-    public void generateUserId() {
-        if (centerId == null || centerId.isEmpty()) {
-            // Default prefix (first two letters)
-            String prefix = (String) centerName.subSequence(0, 3);
-            String uniquePart = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 4);
-            centerId = prefix + uniquePart;
-        }
-    }
 
+	@PrePersist
+	    public void generateUserId() {
+
+	        if (centerId == null || centerId.isEmpty()) {
+
+	            // Default prefix (first two letters)
+
+	            String prefix = (String) centerName.subSequence(0, 3);
+
+	            String uniquePart = UUID.randomUUID().toString().replaceAll("[^0-9]", "").substring(0, 4);
+
+	            centerId = prefix + uniquePart;
+
+	        }
+
+	    }
 }

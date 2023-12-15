@@ -41,10 +41,16 @@ public Tests getTestById(@PathVariable String id) throws IdNotFoundException {
 	return testService.getTestById(id);
 }
 
-@DeleteMapping("deletetest/{id}")
-ResponseEntity<String> deleteTest(@PathVariable (value="id") String testId) throws IdNotFoundException{
-	return new ResponseEntity<String>(testService.deleteTest(testId),HttpStatus.OK);
+//@DeleteMapping("deletetest/{id}")
+//ResponseEntity<String> deleteTest(@PathVariable (value="id") String testId) throws IdNotFoundException{
+//	return new ResponseEntity<String>(testService.deleteTest(testId),HttpStatus.OK);
+//}
+
+@DeleteMapping("deletetest/{userid}/{testid}")
+public String deleteTest(@PathVariable (value="userid") String userId,@PathVariable (value="testid") String testId ) throws IdNotFoundException, InvalidUserException{
+	return testService.deleteTest(userId,testId);
 }
+
 
 
 

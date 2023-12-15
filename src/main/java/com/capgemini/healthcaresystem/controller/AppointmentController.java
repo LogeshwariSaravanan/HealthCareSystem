@@ -8,9 +8,7 @@ import com.capgemini.healthcaresystem.service.AppointmentService;
 @RestController
 @RequestMapping("/api/appointment")
 public class AppointmentController {
-	@Autowired
-	AppointmentService appointmentService;
-	
+
 
 
 }

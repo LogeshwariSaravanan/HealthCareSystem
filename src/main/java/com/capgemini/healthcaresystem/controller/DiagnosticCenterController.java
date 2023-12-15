@@ -38,7 +38,7 @@ public class DiagnosticCenterController {
 	}
 	
 	@DeleteMapping("/deletetest/{userid}/{cid}/{tid}")
-	public boolean deleteTest(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId) throws IdNotFoundException, InvalidUserException {
+	public String deleteTest(@PathVariable (value="userid") String userId, @PathVariable (value="cid") String diagnosticCenterId, @PathVariable (value="tid") String testId) throws IdNotFoundException, InvalidUserException {
 		return diagnosticCenterService.deleteTest(userId,diagnosticCenterId,testId);
 	}
 	

@@ -14,8 +14,8 @@ public interface DiagnosticCenterService {
 
 	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException;
 
-	public boolean deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException, InvalidUserException;
-	
+	public String deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException, InvalidUserException;
+
 	
 	
 

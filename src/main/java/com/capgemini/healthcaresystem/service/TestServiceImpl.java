@@ -36,6 +36,10 @@ public class TestServiceImpl implements TestService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	
+	
+	
 	public TestDto addTest(String userId,Tests test)throws InvalidUserException,IdAlreadyExistException, IdNotFoundException {
 		
 		Optional<User> optionalUser = userRepository.findById(userId);
@@ -78,21 +82,46 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public String deleteTest(String testId) throws IdNotFoundException {
-		if(testRepository.existsById(testId)) {
-			testRepository.deleteById(testId);
-			List<CenterTestMapping> listOfCenterTestMapping=centerTestMappingRepository.findBytestid(testId);
-			for(CenterTestMapping ctm:listOfCenterTestMapping) {
-				centerTestMappingRepository.deleteById(ctm.getTcId());
+	public String deleteTest(String userId, String testId) throws IdNotFoundException, InvalidUserException {
+		if(userRepository.existsById(userId)) {
+			User user=userRepository.findById(userId).get();
+			if(user.getUserRole().equals("Admin")) {
+				if(testRepository.existsById(testId)) {
+					Tests test=testRepository.findById(testId).get();
+					centerTestMappingRepository.deleteCenterByTest(test);
+					testRepository.deleteById(testId);
+					return test.getTestName()+" is deleted successfully";
+
+				}
+				else {
+					throw new IdNotFoundException("Test not found");
+				}
 			}
-			return "test id : "+testId+" deleted successfully";
+			else {
+				throw new InvalidUserException("Admin only permitted to delete the center");
+			}
 		}
-		throw new IdNotFoundException("Test not Found");
+		else {
+			throw new IdNotFoundException("User not found");
+		}
 	}
 
-
-
-
+//	@Override
+//	public String deleteTest(String testId) throws IdNotFoundException {
+//		if(testRepository.existsById(testId)) {
+//			testRepository.deleteById(testId);
+//			List<CenterTestMapping> listOfCenterTestMapping=centerTestMappingRepository.findBytestid(testId);
+//			for(CenterTestMapping ctm:listOfCenterTestMapping) {
+//				centerTestMappingRepository.deleteById(ctm.getTcId());
+//			}
+//			return "test id : "+testId+" deleted successfully";
+//		}
+//		throw new IdNotFoundException("Test not Found");
+//	}
+//
+//
+//
+//
 
 	
 

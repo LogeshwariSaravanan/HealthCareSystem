@@ -7,6 +7,7 @@ public class ErrorInfo {
 	private String errorMessage;
 	private String httpStatus;
 	private LocalDateTime localDateTime;
+	
 	public String getErrorMessage() {
 		return errorMessage;
 	}

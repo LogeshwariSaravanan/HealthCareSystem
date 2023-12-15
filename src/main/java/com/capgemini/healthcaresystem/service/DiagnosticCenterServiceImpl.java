@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.aspectj.weaver.ast.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,22 +53,30 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			List<BigInteger> listOfCenterContactNo=diagnosticCenterRepository.findAllCenterByContactNo();
 			if(!listOfCenterContactNo.contains(diagnosticCenter.getContactNo())) {
 				diagnosticCenterRepository.save(diagnosticCenter);
-				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
 				List<Tests> listOfTest=testRepository.findAll();
-				TestDto[] defaultTestDto=new TestDto[3];
+				Tests[] defaultTestList=new Tests[3];
 				for(int i=0;i<3;i++) {
-					TestDto testDto=modelMapper.map(listOfTest.get(i),TestDto.class);
-					defaultTestDto[i]=testDto;
+					Tests tests=listOfTest.get(i);
+					defaultTestList[i]=tests;	
 				}
-				diagnosticCenterDto2.setListOfTest(Arrays.asList(defaultTestDto));
-				for(int i=0;i<3;i++) {
+				for(Tests tests:defaultTestList) {
 					
 					CenterTestMapping centerTestMapping=new CenterTestMapping();
-				    centerTestMapping.setTestid(diagnosticCenterDto2.getListOfTest().get(i).getTestId());
-				    centerTestMapping.setCenterId(diagnosticCenterDto2.getCenterId());
+				    centerTestMapping.setTest(tests);
+				    centerTestMapping.setDiagnosticCenter(diagnosticCenter);
 				    centerTestMappingRepository.save(centerTestMapping);
 				}
 				
+				
+				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
+				TestDto[] defaultTestDtoList=new TestDto[3];
+				for(int i=0;i<3;i++) {
+					TestDto testDto=modelMapper.map(listOfTest.get(i),TestDto.class);
+					defaultTestDtoList[i]=testDto;
+						
+				}
+				diagnosticCenterDto2.setListOfTest(Arrays.asList(defaultTestDtoList));
+
 				return diagnosticCenterDto2;
 			}
 			
@@ -79,34 +88,10 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			throw new InvalidUserException("Admin only add the center");
 		}
 	}
-	
-	
-	@Override
-	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException {
-		Optional<User> userOptional=userRepository.findById(userId);
-		if(userOptional.isEmpty())
-		{
-			throw new IdNotFoundException("User not found");
-		}
-		User user=userOptional.get();
-		if(user.getUserRole().equals("Admin")) {
-			if(diagnosticCenterRepository.existsById(diagnosticCenterId)) {
-			diagnosticCenterRepository.deleteById(diagnosticCenterId);
-			centerTestMappingRepository.deleteCenterTestMappingById(diagnosticCenterId);
-			return true;
-		}
-		else {
-		  throw new IdNotFoundException("Center Id Not Found");
-		}
-		}else {
-			throw new InvalidUserException("Admin only add the Test");
-		}
-	}
 
-	
-	
-	
-	public DiagnosticCenterDto addTest(String userId,String centerId, String testId)throws IdAlreadyExistException, IdNotFoundException, InvalidUserException {
+
+	@Override
+	public DiagnosticCenterDto addTest(String userId, String centerId, String testId)throws IdNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException {
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
@@ -118,22 +103,22 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			if(diagnosticCenterOptional.isEmpty()) {
 				throw new IdNotFoundException("Center not found");
 			}
-			else {
-				List<String> listOfTestId=centerTestMappingRepository.findTestIdByCenterId(centerId);
+				DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
+				List<Tests> listOfTestInCenter=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
 				List<String> listOfTest=testRepository.findAllByTestId();
 				if(listOfTest.contains(testId)) {
-					if(!listOfTestId.contains(testId)) {
+					Tests test=testRepository.findById(testId).get();
+					if(!listOfTestInCenter.contains(test)) {
 					    CenterTestMapping centerTestMapping=new CenterTestMapping();
-						centerTestMapping.setTestid(testId);
-						centerTestMapping.setCenterId(centerId);
+						centerTestMapping.setTest(test);
+						centerTestMapping.setDiagnosticCenter(diagnosticCenter);
 						centerTestMappingRepository.save(centerTestMapping);
-						DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 						DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
 					 	List<TestDto> listOfTestDtos=new ArrayList<>();
-					    List<CenterTestMapping> centerTestMappings=	centerTestMappingRepository.findBycenterId(centerId);
+					    List<CenterTestMapping> centerTestMappings=	centerTestMappingRepository.findBydiagnosticCenter(diagnosticCenter);
 					    for(CenterTestMapping ctm:centerTestMappings) {
-						    Tests test=testRepository.findById(ctm.getTestid()).get();
-						    TestDto testDto=modelMapper.map(test,TestDto.class);
+						    Tests tests=testRepository.findById(ctm.getTest().getTestid()).get();
+						    TestDto testDto=modelMapper.map(tests,TestDto.class);
 						    listOfTestDtos.add(testDto);
 						    }
 					    diagnosticCenterDto2.setListOfTest(listOfTestDtos);
@@ -145,17 +130,42 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 				}
 				else {
 					throw new IdNotFoundException("Test not present");
-				}	
-			}			
+				}
 		}
 		else {
 			throw new InvalidUserException("Admin only add the center");
 		}
 	}
 
+
 	@Override
-	public boolean deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException,InvalidUserException{
-		 
+	public boolean deleteCenter(String userId, String diagnosticCenterId)throws IdNotFoundException, InvalidUserException {
+		Optional<User> userOptional=userRepository.findById(userId);
+		if(userOptional.isEmpty())
+		{
+			throw new IdNotFoundException("User not found");
+		}
+		User user=userOptional.get();
+		if(user.getUserRole().equals("Admin")) {
+			if(diagnosticCenterRepository.existsById(diagnosticCenterId)) {
+				DiagnosticCenter diagnosticCenter=diagnosticCenterRepository.findById(diagnosticCenterId).get();
+				centerTestMappingRepository.deleteCenterTestMappingByCenter(diagnosticCenter);
+			    diagnosticCenterRepository.deleteById(diagnosticCenterId);
+			
+			return true;
+		}
+		else {
+		  throw new IdNotFoundException("Center Id Not Found");
+		}
+		}else {
+			throw new InvalidUserException("Admin only add the Test");
+		}
+		
+	}
+
+
+	@Override
+	public String deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException, InvalidUserException {
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
@@ -164,19 +174,29 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 		User user=userOptional.get();
 	    if (user.getUserRole().equals("Admin")) {
 	        if (diagnosticCenterRepository.existsById(diagnosticCenterId)) {
+	        	DiagnosticCenter diagnosticCenter=diagnosticCenterRepository.findById(diagnosticCenterId).get();
+	        	List<Tests> listOfTestInCenter=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
 	            if (testRepository.existsById(testId)) {
-	                centerTestMappingRepository.deletebyCenterIdAndTestId(diagnosticCenterId, testId);
-	                return true;
+	            	Tests test=testRepository.findById(testId).get();
+	            	if(listOfTestInCenter.contains(test)) {
+		                centerTestMappingRepository.deleteTestFromCenter(diagnosticCenter, test);
+		                return test.getTestName()+" is deleted from the center "+diagnosticCenter.getCenterName();
+	            	}
+	            	else {
+	            		throw new IdNotFoundException("Test not present in this Center");
+	            	}
 	            } else {
 	                throw new IdNotFoundException("test id does not exist");
 	            }
 	        } else {
-	            throw new IdNotFoundException("center id not found exception");
+	            throw new IdNotFoundException("center not found exception");
 	        }
 	    } else {
 	    	throw new InvalidUserException("Admin only add the Test");
 	    }
+		
 	}
+
 
 
 
