@@ -1,7 +1,5 @@
 package com.capgemini.healthcaresystem.entity;
 
-import org.aspectj.weaver.ast.Test;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

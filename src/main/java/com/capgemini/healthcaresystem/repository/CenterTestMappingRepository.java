@@ -33,12 +33,6 @@ public interface CenterTestMappingRepository extends JpaRepository<CenterTestMap
 	void deleteTestFromCenter(DiagnosticCenter diagnosticCenter,Tests test);
 
 	
-//	void deleteBytest(Tests test);
-//	@Transactional
-//	@Modifying
-//	@Query("DELETE FROM centerTestMapping c Where c.test=?1")
-//	void deleteCenterTestMappingByTest(Tests test);
-	
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM CenterTestMapping c WHERE c.test=?1")

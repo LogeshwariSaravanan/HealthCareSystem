@@ -2,7 +2,6 @@ package com.capgemini.healthcaresystem.entity;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

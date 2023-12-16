@@ -33,7 +33,7 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
-	@PostMapping("/add")
+	@PostMapping("/register")
 	public ResponseEntity<UserDto> addUser(@RequestBody User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException, IdAlreadyExistException
 	{
 		return new ResponseEntity<UserDto>(userService.addUser(user), HttpStatus.OK);

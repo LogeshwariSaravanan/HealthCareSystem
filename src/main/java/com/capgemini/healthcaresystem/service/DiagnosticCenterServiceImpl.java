@@ -6,14 +6,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.aspectj.weaver.ast.Test;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
 import com.capgemini.healthcaresystem.dto.TestDto;
-import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.CenterTestMapping;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
 import com.capgemini.healthcaresystem.entity.Tests;
