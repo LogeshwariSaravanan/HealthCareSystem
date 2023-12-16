@@ -105,22 +105,7 @@ public class TestServiceImpl implements TestService {
 		}
 	}
 
-//	@Override
-//	public String deleteTest(String testId) throws IdNotFoundException {
-//		if(testRepository.existsById(testId)) {
-//			testRepository.deleteById(testId);
-//			List<CenterTestMapping> listOfCenterTestMapping=centerTestMappingRepository.findBytestid(testId);
-//			for(CenterTestMapping ctm:listOfCenterTestMapping) {
-//				centerTestMappingRepository.deleteById(ctm.getTcId());
-//			}
-//			return "test id : "+testId+" deleted successfully";
-//		}
-//		throw new IdNotFoundException("Test not Found");
-//	}
-//
-//
-//
-//
+
 
 	
 

@@ -34,14 +34,13 @@ public class UserController {
 	UserService userService;
 	
 	@PostMapping("/register")
-	public ResponseEntity<UserDto> addUser(@RequestBody User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException, IdAlreadyExistException
-	{
-		return new ResponseEntity<UserDto>(userService.addUser(user), HttpStatus.OK);
+	public UserDto addUser(@RequestBody User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException, IdAlreadyExistException{
+		return userService.addUser(user);
 	}
 	
 	@PostMapping("/login")
-	ResponseEntity<String> login(@RequestBody User user) throws IdNotFoundException,InvalidPasswordException{
-		return new ResponseEntity<String>(userService.login(user),HttpStatus.OK);
+	public String login(@RequestBody User user) throws IdNotFoundException,InvalidPasswordException{
+		return userService.login(user);
 	}
 	
 	@GetMapping("/get")
@@ -61,13 +60,14 @@ public class UserController {
 	}
 	
 	@GetMapping("/checkstatus/{appointmentid}")
-	ResponseEntity<String> checkStatus(@PathVariable (value="appointmentid") int appointmentId) throws IdNotFoundException{
-		return new ResponseEntity<String>(userService.checkStatus(appointmentId),HttpStatus.OK);
+	public String checkStatus(@PathVariable (value="appointmentid") int appointmentId) throws IdNotFoundException{
+		return userService.checkStatus(appointmentId);
 	}
 	
 	@DeleteMapping("/cancelappointment/{appointmentid}")
-	ResponseEntity<String> cancelAppointment(@PathVariable (value="appointmentid") int appointmentId) throws IdNotFoundException{
-		return new ResponseEntity<String>(userService.cancelAppointment(appointmentId),HttpStatus.OK);
+	public String cancelAppointment(@PathVariable (value="appointmentid") int appointmentId) throws IdNotFoundException{
+		return userService.cancelAppointment(appointmentId);
 	}
+	
 
 }

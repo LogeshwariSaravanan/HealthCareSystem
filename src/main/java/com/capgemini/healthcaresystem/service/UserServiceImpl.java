@@ -170,10 +170,7 @@ public class UserServiceImpl implements UserService {
 			  }
 			  else {
 				  throw new IdAlreadyExistException("One user make only one appointment");
-			  }
-			  
-
-		
+			  }		
 	}
 
 
