@@ -22,68 +22,49 @@ public class DiagnosticCenter {
 	@Column(name="contact_no",unique = true,nullable = false)
 	private BigInteger contactNo;
 	
-	@Column(name="address",unique = true)
-	private String address;
+	@Column(name="location")
+	private String location;
 	
 	public DiagnosticCenter() {
 		super();
 	}
-
-	
-	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String address) {
+	public DiagnosticCenter(String centerId, String centerName, BigInteger contactNo, String location) {
 		super();
 		this.centerId = centerId;
 		this.centerName = centerName;
 		this.contactNo = contactNo;
-		this.address = address;
+		this.location = location;
 	}
-
 	public String getCenterId() {
 		return centerId;
 	}
-
-
 	public void setCenterId(String centerId) {
 		this.centerId = centerId;
 	}
-
-
 	public String getCenterName() {
 		return centerName;
 	}
-
-
 	public void setCenterName(String centerName) {
 		this.centerName = centerName;
 	}
-
-
 	public BigInteger getContactNo() {
 		return contactNo;
 	}
-
-
 	public void setContactNo(BigInteger contactNo) {
 		this.contactNo = contactNo;
 	}
-
-
-	public String getAddress() {
-		return address;
+	public String getLocation() {
+		return location;
 	}
-
-
-	public void setAddress(String address) {
-		this.address = address;
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
-
 	@Override
 	public String toString() {
 		return "DiagnosticCenter [centerId=" + centerId + ", centerName=" + centerName + ", contactNo=" + contactNo
-				+ ", address=" + address + "]";
+				+ ", location=" + location + "]";
 	}
-
 
 	@PrePersist
 	    public void generateUserId() {

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
@@ -19,6 +20,7 @@ import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
+import com.capgemini.healthcaresystem.repository.AppointmentRepository;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
 import com.capgemini.healthcaresystem.repository.DiagnosticCenterRepository;
 import com.capgemini.healthcaresystem.repository.TestRepository;
@@ -36,6 +38,8 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 	@Autowired
 	UserRepository userRepository;
 	@Autowired
+	AppointmentRepository appointmentRepository;
+	@Autowired
 	ModelMapper modelMapper;
 	
 	
@@ -52,28 +56,25 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			if(!listOfCenterContactNo.contains(diagnosticCenter.getContactNo())) {
 				diagnosticCenterRepository.save(diagnosticCenter);
 				List<Tests> listOfTest=testRepository.findAll();
-				Tests[] defaultTestList=new Tests[3];
+				List<Tests> defaultTestList=new ArrayList<>();
 				for(int i=0;i<3;i++) {
 					Tests tests=listOfTest.get(i);
-					defaultTestList[i]=tests;	
+					defaultTestList.add(tests)	;
 				}
 				for(Tests tests:defaultTestList) {
-					
 					CenterTestMapping centerTestMapping=new CenterTestMapping();
 				    centerTestMapping.setTest(tests);
 				    centerTestMapping.setDiagnosticCenter(diagnosticCenter);
 				    centerTestMappingRepository.save(centerTestMapping);
 				}
 				
-				
 				DiagnosticCenterDto diagnosticCenterDto2=modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class);
-				TestDto[] defaultTestDtoList=new TestDto[3];
+				List<TestDto> defaultTestDtoList=new ArrayList<>();
 				for(int i=0;i<3;i++) {
 					TestDto testDto=modelMapper.map(listOfTest.get(i),TestDto.class);
-					defaultTestDtoList[i]=testDto;
-						
+					defaultTestDtoList.add(testDto);
 				}
-				diagnosticCenterDto2.setListOfTest(Arrays.asList(defaultTestDtoList));
+				diagnosticCenterDto2.setListOfTest(defaultTestDtoList);
 
 				return diagnosticCenterDto2;
 			}
@@ -103,7 +104,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 			}
 				DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 				List<Tests> listOfTestInCenter=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
-				List<String> listOfTest=testRepository.findAllByTestId();
+				List<String> listOfTest=testRepository.findAllTestId();
 				if(listOfTest.contains(testId)) {
 					Tests test=testRepository.findById(testId).get();
 					if(!listOfTestInCenter.contains(test)) {
@@ -137,7 +138,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 
 
 	@Override
-	public boolean deleteCenter(String userId, String diagnosticCenterId)throws IdNotFoundException, InvalidUserException {
+	public boolean deleteCenter(String userId, String diagnosticCenterId)throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
 		Optional<User> userOptional=userRepository.findById(userId);
 		if(userOptional.isEmpty())
 		{
@@ -147,10 +148,16 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 		if(user.getUserRole().equals("Admin")) {
 			if(diagnosticCenterRepository.existsById(diagnosticCenterId)) {
 				DiagnosticCenter diagnosticCenter=diagnosticCenterRepository.findById(diagnosticCenterId).get();
-				centerTestMappingRepository.deleteCenterTestMappingByCenter(diagnosticCenter);
-			    diagnosticCenterRepository.deleteById(diagnosticCenterId);
+				List<DiagnosticCenter> listOfDiagnosticCenter=appointmentRepository.findDiagnosticCenter();
+				if(!listOfDiagnosticCenter.contains(diagnosticCenter)) {
+					centerTestMappingRepository.deleteCenterTestMappingByCenter(diagnosticCenter);
+				    diagnosticCenterRepository.deleteById(diagnosticCenterId);
+				    return true;
+				}else {
+					throw new IdAlreadyExistException("Appointment found in this center you can't remove the center");
+				}
 			
-			return true;
+			
 		}
 		else {
 		  throw new IdNotFoundException("Center Id Not Found");

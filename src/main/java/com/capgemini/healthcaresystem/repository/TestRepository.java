@@ -22,7 +22,7 @@ public interface TestRepository extends JpaRepository<Tests, String> {
 	@Transactional
 	@Modifying
 	@Query("SELECT t.testid FROM Tests t")
-	List<String> findAllByTestId();
+	List<String> findAllTestId();
 
 
 }

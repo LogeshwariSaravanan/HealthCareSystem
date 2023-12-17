@@ -41,7 +41,7 @@ public Tests getTestById(@PathVariable String id) throws IdNotFoundException {
 
 
 @DeleteMapping("deletetest/{userid}/{testid}")
-public String deleteTest(@PathVariable (value="userid") String userId,@PathVariable (value="testid") String testId ) throws IdNotFoundException, InvalidUserException{
+public String deleteTest(@PathVariable (value="userid") String userId,@PathVariable (value="testid") String testId ) throws IdNotFoundException, InvalidUserException,IdAlreadyExistException{
 	return testService.deleteTest(userId,testId);
 }
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
+import com.capgemini.healthcaresystem.entity.Tests;
 import com.capgemini.healthcaresystem.entity.User;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +26,17 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Integ
 	List<Appointment> findByUser(User user);
 	
 	List<Appointment> findByDiagnosticCenter(DiagnosticCenter diagnosticCenter);
+	
+	
+	@Transactional
+	@Modifying
+	@Query("SELECT a.diagnosticCenter FROM Appointment a")
+	List<DiagnosticCenter> findDiagnosticCenter();
+	
+	@Transactional
+	@Modifying
+	@Query("SELECT a.test FROM Appointment a")
+	List<Tests> findTest();
 	
 	
 	

@@ -13,6 +13,7 @@ import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
+import com.capgemini.healthcaresystem.repository.AppointmentRepository;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
 import com.capgemini.healthcaresystem.repository.DiagnosticCenterRepository;
 import com.capgemini.healthcaresystem.repository.TestRepository;
@@ -31,8 +32,8 @@ public class TestServiceImpl implements TestService {
 	
 	@Autowired
 	UserRepository userRepository;
-	
-	
+	@Autowired
+	AppointmentRepository appointmentRepository;
 	@Autowired
 	ModelMapper modelMapper;
 	
@@ -81,15 +82,22 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
-	public String deleteTest(String userId, String testId) throws IdNotFoundException, InvalidUserException {
+	public String deleteTest(String userId, String testId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
 		if(userRepository.existsById(userId)) {
 			User user=userRepository.findById(userId).get();
 			if(user.getUserRole().equals("Admin")) {
 				if(testRepository.existsById(testId)) {
 					Tests test=testRepository.findById(testId).get();
-					centerTestMappingRepository.deleteCenterByTest(test);
-					testRepository.deleteById(testId);
-					return test.getTestName()+" is deleted successfully";
+					List<Tests> listOfTest=appointmentRepository.findTest();
+					if(!listOfTest.contains(test)) {
+						centerTestMappingRepository.deleteCenterByTest(test);
+						testRepository.deleteById(testId);
+						return test.getTestName()+" is deleted successfully";
+					}
+					else {
+						throw new IdAlreadyExistException("Appointment booked for this test so You can't delete this test");
+					}
+					
 
 				}
 				else {

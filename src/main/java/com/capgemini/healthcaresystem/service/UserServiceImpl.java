@@ -75,15 +75,15 @@ public class UserServiceImpl implements UserService {
         			}
         		}
         		else {
-        			throw new InvalidContactNumberException(" Not a valid ContactNumber");
+        			throw new InvalidContactNumberException("Not a valid ContactNumber.Must contains 10 digits");
         			}
         		}
         	else {
-        		throw new InvalidPasswordException("Not valid password");
+        		throw new InvalidPasswordException("Not valid password.Should contain one alphabet,one number ,One Special character and must contain 8 character Not more than 14");
     		}
         }
 		else {
-		  throw new InvalidUserNameException("Not a valid name");
+		  throw new InvalidUserNameException("Not a valid name.Name starts with capital letter only");
 		}
 		
 	}
@@ -121,14 +121,13 @@ public class UserServiceImpl implements UserService {
 			UserDto userDto=modelMapper.map(user, UserDto.class);
 			listOfUserDto.add(userDto);
 		}
-		
 		return listOfUserDto;
 		
 	}
 	
 	
 	@Override
-	public AppointmentDto makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
+	public Appointment makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
 		Optional<User> userOptional=userRepository.findById(appointment.getUser().getUserId());
 		if(userOptional.isEmpty())
 		{
@@ -147,25 +146,33 @@ public class UserServiceImpl implements UserService {
 				  appointment.setDiagnosticCenter(diagnosticCenter);
 				  
 				  List<Tests> listOfTest=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
-				  Tests test=testRepository.findById(appointment.getTest().getTestid()).get();
-				  appointment.setTest(test);
-				  if(listOfTest.contains(appointment.getTest())) {
-					  appointmentRepository.save(appointment);
-								
-					  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
-					  
-					  UserDto userDto=modelMapper.map(user,UserDto.class);
-					  appointmentDto2.setUserDto(userDto);
-					  
-					  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
-					  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
-					  
-					  TestDto testDto=modelMapper.map(test, TestDto.class);
-					  appointmentDto2.setTestDto(testDto);
-					  
-					  return appointmentDto2;
+				  if(testRepository.existsById(appointment.getTest().getTestid())) {
+					  Tests test=testRepository.findById(appointment.getTest().getTestid()).get();
+					  appointment.setTest(test);
+					  if(listOfTest.contains(appointment.getTest())) {
+						 return appointmentRepository.save(appointment);
+									
+//						  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
+//						  
+//						  UserDto userDto=modelMapper.map(user,UserDto.class);
+//						  appointmentDto2.setUserDto(userDto);
+//						  
+//						  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
+//						  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
+//						  
+//						  TestDto testDto=modelMapper.map(test, TestDto.class);
+//						  appointmentDto2.setTestDto(testDto);
+//						  
+//						  return appointmentDto2;
+					  }
+					  else {
+					  throw new IdNotFoundException("Test not found in this Center");
+					  }
 				  }
-				  throw new IdNotFoundException("Test not found in this Center");
+				  else {
+					  throw new IdNotFoundException("No such test exist");
+				  }
+				 
 				  
 			  }
 			  else {
@@ -190,7 +197,7 @@ public class UserServiceImpl implements UserService {
 			DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 			List<Appointment> listOfAppointment=appointmentRepository.findByDiagnosticCenter(diagnosticCenter);
 			if(listOfAppointment.isEmpty()) {
-				return "no appointments to approve in center "+diagnosticCenterId;
+				return "No appointments to approve in center "+diagnosticCenterId;
 			}
 			else {
 				for(Appointment appointment:listOfAppointment) {

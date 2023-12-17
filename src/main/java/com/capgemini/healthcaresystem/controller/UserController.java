@@ -49,7 +49,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/makeappointment")
-	public AppointmentDto makeAppointment(@RequestBody Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
+	public Appointment makeAppointment(@RequestBody Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
 		return userService.makeAppointment(appointment);
 	}
 

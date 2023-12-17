@@ -87,7 +87,7 @@ public class DiagnosticCenterTest {
 	
 	
 	@Test
-    void DeleteCenterTest() throws IdNotFoundException, InvalidUserException {
+    void DeleteCenterTest() throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
         // Mocking the user repository
         User adminUser = new User();
         adminUser.setUserId("adminUserId");

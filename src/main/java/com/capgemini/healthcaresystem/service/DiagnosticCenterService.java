@@ -12,7 +12,7 @@ public interface DiagnosticCenterService {
 
 	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException;
 
-	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException;
+	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 
 	public String deleteTest(String userId, String diagnosticCenterId, String testId) throws IdNotFoundException, InvalidUserException;
 
