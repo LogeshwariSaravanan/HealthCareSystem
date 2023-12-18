@@ -9,9 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.capgemini.healthcaresystem.dto.AppointmentDto;
-import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
-import com.capgemini.healthcaresystem.dto.TestDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
@@ -53,14 +50,14 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException ,InvalidContactNumberException,InvalidEmailIdException,IdAlreadyExistException{
-        String userNameRegex = "^[A-Z][a-zA-Z0-9]*$";
+        String userNameRegex = "^[A-Z][a-z]*$";
         if(user.getUserName().matches(userNameRegex)) {
         	String passwordRegex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,14}$";
         	if(user.getUserPassword().matches(passwordRegex)) {
         		if(user.getContactNo().toString().length() == 10) {
         			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         			if(user.getUserEmail().matches(emailRegex)) {
-        				List<BigInteger> ListOfUserContactNo=userRepository.FindAllUserByContactNo();
+        				List<BigInteger> ListOfUserContactNo=userRepository.findAllUserByContactNo();
         				if(!ListOfUserContactNo.contains(user.getContactNo())) {
         					userRepository.save(user);
                     		UserDto userDto2=modelMapper.map(user,UserDto.class);
@@ -145,37 +142,29 @@ public class UserServiceImpl implements UserService {
 				  DiagnosticCenter diagnosticCenter=diagnosticCenterOptional.get();
 				  appointment.setDiagnosticCenter(diagnosticCenter);
 				  
-				  List<Tests> listOfTest=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
 				  if(testRepository.existsById(appointment.getTest().getTestid())) {
 					  Tests test=testRepository.findById(appointment.getTest().getTestid()).get();
-					  appointment.setTest(test);
-					  if(listOfTest.contains(appointment.getTest())) {
+					  List<Tests> listOfTest=centerTestMappingRepository.findTestByCenter(diagnosticCenter);
+					  if(listOfTest.contains(test)) 
+					  {
+						  appointment.setTest(test);
 						 return appointmentRepository.save(appointment);
 									
-//						  AppointmentDto appointmentDto2= modelMapper.map(appointment, AppointmentDto.class);
-//						  
-//						  UserDto userDto=modelMapper.map(user,UserDto.class);
-//						  appointmentDto2.setUserDto(userDto);
-//						  
-//						  DiagnosticCenterDto diagnosticCenterDto=modelMapper.map(diagnosticCenter,DiagnosticCenterDto.class);
-//						  appointmentDto2.setDiagnosticCenterDto(diagnosticCenterDto);
-//						  
-//						  TestDto testDto=modelMapper.map(test, TestDto.class);
-//						  appointmentDto2.setTestDto(testDto);
-//						  
-//						  return appointmentDto2;
 					  }
-					  else {
+					  else 
+					  {
 					  throw new IdNotFoundException("Test not found in this Center");
 					  }
 				  }
-				  else {
+				  else 
+				  {
 					  throw new IdNotFoundException("No such test exist");
 				  }
 				 
 				  
 			  }
-			  else {
+			  else 
+			  {
 				  throw new IdAlreadyExistException("One user make only one appointment");
 			  }		
 	}

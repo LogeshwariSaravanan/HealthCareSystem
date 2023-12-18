@@ -3,12 +3,16 @@ package com.capgemini.healthcaresystem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +31,7 @@ import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
+import com.capgemini.healthcaresystem.repository.AppointmentRepository;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
 import com.capgemini.healthcaresystem.repository.DiagnosticCenterRepository;
 import com.capgemini.healthcaresystem.repository.TestRepository;
@@ -37,10 +42,10 @@ import com.capgemini.healthcaresystem.service.DiagnosticCenterServiceImpl;
 public class DiagnosticCenterTest {
 	@Mock
 	private DiagnosticCenterRepository diagnosticCenterRepository;
-	@InjectMocks
-	private DiagnosticCenterServiceImpl diagnosticCenterServiceImpl;
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private AppointmentRepository appointmentRepository;
 	@Mock 
 	private CenterTestMapping centerTestMapping;
 	@Mock 
@@ -51,6 +56,8 @@ public class DiagnosticCenterTest {
 	private ModelMapper modelMapper;
 	@Mock
 	private DiagnosticCenterDto diagnosticCenterDto;
+	@InjectMocks
+	private DiagnosticCenterServiceImpl diagnosticCenterServiceImpl;
 	
 	@Test
 	public void AddCenterTestCase() throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
@@ -87,27 +94,35 @@ public class DiagnosticCenterTest {
 	
 	
 	@Test
-    void DeleteCenterTest() throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
-        // Mocking the user repository
+    void testDeleteCenter() {
+        // Arrange
+        String userId = "someUserId";
+        String diagnosticCenterId = "someDiagnosticCenterId";
+
         User adminUser = new User();
-        adminUser.setUserId("adminUserId");
+        adminUser.setUserId(userId);
         adminUser.setUserRole("Admin");
-        when(userRepository.findById("adminUserId")).thenReturn(Optional.of(adminUser));
- 
-        // Mocking the diagnostic center repository
+
         DiagnosticCenter diagnosticCenter = new DiagnosticCenter();
-        when(diagnosticCenterRepository.existsById("diagnosticCenterId")).thenReturn(true);
-        when(diagnosticCenterRepository.findById("diagnosticCenterId")).thenReturn(Optional.of(diagnosticCenter));
- 
-        // Mocking the center test mapping repository
-        doNothing().when(centerTestMappingRepository).deleteCenterTestMappingByCenter(diagnosticCenter);
- 
-        // Call the deleteCenter method
-        boolean result = diagnosticCenterServiceImpl.deleteCenter("adminUserId", "diagnosticCenterId");
- 
-        // Assertions
-        assertTrue(result);
-        // Add more assertions as needed based on the expected behavior of the method
+        diagnosticCenter.setCenterId(diagnosticCenterId);
+
+        // Mocking repository methods
+        when(userRepository.findById(userId)).thenReturn(Optional.of(adminUser));
+        when(diagnosticCenterRepository.existsById(diagnosticCenterId)).thenReturn(true);
+        when(diagnosticCenterRepository.findById(diagnosticCenterId)).thenReturn(Optional.of(diagnosticCenter));
+        when(appointmentRepository.findDiagnosticCenter()).thenReturn(new ArrayList<>());
+
+        // Act
+        try {
+            boolean result = diagnosticCenterServiceImpl.deleteCenter(userId, diagnosticCenterId);
+
+            // Assert
+            assertTrue(result);
+            verify(centerTestMappingRepository, times(1)).deleteCenterTestMappingByCenter(diagnosticCenter);
+            verify(diagnosticCenterRepository, times(1)).deleteById(diagnosticCenterId);
+        } catch (Exception e) {
+            fail("Exception not expected: " + e.getMessage());
+        }
     }
 	
 	@Test

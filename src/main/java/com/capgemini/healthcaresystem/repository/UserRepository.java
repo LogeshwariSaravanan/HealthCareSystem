@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<User, String>{
 	@Transactional
 	@Modifying
 	@Query("SELECT u.contactNo FROM User u")
-	List<BigInteger> FindAllUserByContactNo();
+	List<BigInteger> findAllUserByContactNo();
 }

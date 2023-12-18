@@ -10,7 +10,7 @@ public interface DiagnosticCenterService {
 
 	public DiagnosticCenterDto addCenter(String userId,DiagnosticCenter diagnosticCenter) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 
-	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException, IdNotFoundException;
+	public DiagnosticCenterDto addTest(String userId, String centerId, String testId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 
 	public boolean deleteCenter(String userId, String diagnosticCenterId) throws IdNotFoundException, InvalidUserException, IdAlreadyExistException;
 

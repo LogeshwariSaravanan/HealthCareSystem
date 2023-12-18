@@ -2,13 +2,11 @@ package com.capgemini.healthcaresystem.service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.capgemini.healthcaresystem.dto.DiagnosticCenterDto;
@@ -163,7 +161,7 @@ public class DiagnosticCenterServiceImpl implements DiagnosticCenterService {
 		  throw new IdNotFoundException("Center Id Not Found");
 		}
 		}else {
-			throw new InvalidUserException("Admin only add the Test");
+			throw new InvalidUserException("Admin only delete the center");
 		}
 		
 	}

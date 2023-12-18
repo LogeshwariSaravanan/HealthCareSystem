@@ -1,5 +1,6 @@
 package com.capgemini.healthcaresystem;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,16 +12,17 @@ import static org.mockito.Mockito.when;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+//import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.DiagnosticCenter;
@@ -149,9 +151,61 @@ public class UserServiceTest {
 //	        verify(appointmentRepository, times(1)).findById(appointmentId);
     }
     
+  
+    @Test
+    void makeAppointmentTest() throws IdNotFoundException, IdAlreadyExistException {
+        // Mock data
+        User user = new User("Log123","Logeshwari","log@123",BigInteger.valueOf(8786767575L),"Customer","logi@gmail.com",20,"female");
+        DiagnosticCenter diagnosticCenter = new DiagnosticCenter("che123", "apollo",BigInteger.valueOf(8786767574L) ,"Chennai");
+        Tests test = new Tests("B123","Blood Test");
+        Appointment appointment = new Appointment(BigInteger.valueOf(1L),LocalDateTime.now(),false,test,user,diagnosticCenter);
+        appointment.setUser(user);
+        appointment.setDiagnosticCenter(diagnosticCenter);
+        appointment.setTest(test);
+
+        // Mocking repository calls
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+        when(diagnosticCenterRepository.findById(diagnosticCenter.getCenterId())).thenReturn(Optional.of(diagnosticCenter));
+        when(testRepository.existsById(test.getTestid())).thenReturn(true);
+        when(testRepository.findById(test.getTestid())).thenReturn(Optional.of(test));
+        
+        List<Tests> listOfTest = Arrays.asList(test);
+        when(centerTestMappingRepository.findTestByCenter(diagnosticCenter)).thenReturn(listOfTest);
+        when(appointmentRepository.save(appointment)).thenReturn(appointment);
+
+        // Perform the test
+        Appointment result=userServiceImpl.makeAppointment(appointment);
+        assertEquals(appointment, result);
+        assertEquals("B123",appointment.getTest().getTestid());
+    }
+    
+    
+    @Test
+    void approveAppointmenttest() throws InvalidUserException, IdNotFoundException {
+        // Mock data
+        String userId = "admin";
+        String diagnosticCenterId = "che123";
+        User adminUser = new User(userId,"Admin","admin@123",BigInteger.valueOf(8786767579L),"Admin","admin@gmail.com",0,"Male");
+        DiagnosticCenter diagnosticCenter = new DiagnosticCenter(diagnosticCenterId, "apollo",BigInteger.valueOf(8786767574L) ,"Chennai");
+        List<Appointment> listOfAppointments = new ArrayList<>(); // Add appointments as needed
+
+        // Mocking repository calls
+        when(userRepository.findById(userId)).thenReturn(Optional.of(adminUser));
+        when(diagnosticCenterRepository.findById(diagnosticCenterId)).thenReturn(Optional.of(diagnosticCenter));
+        when(appointmentRepository.findByDiagnosticCenter(diagnosticCenter)).thenReturn(listOfAppointments);
+
+        // Perform the test
+        String result = userServiceImpl.approveAppointment(userId, diagnosticCenterId);
+
+        // Assert the result
+        assertEquals("No appointments to approve in center " + diagnosticCenterId, result);
+    }
+}
+    
+   
+   
     
 
-}
 
 
 

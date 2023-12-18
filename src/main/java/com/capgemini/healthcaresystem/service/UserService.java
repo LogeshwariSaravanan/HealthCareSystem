@@ -2,7 +2,6 @@ package com.capgemini.healthcaresystem.service;
 
 import java.util.List;
 
-import com.capgemini.healthcaresystem.dto.AppointmentDto;
 import com.capgemini.healthcaresystem.dto.UserDto;
 import com.capgemini.healthcaresystem.entity.Appointment;
 import com.capgemini.healthcaresystem.entity.User;
@@ -18,7 +17,7 @@ public interface UserService {
 	public UserDto addUser(User user) throws InvalidUserNameException,InvalidPasswordException,InvalidContactNumberException,InvalidEmailIdException, IdAlreadyExistException;
 	public String login(User user) throws IdNotFoundException,InvalidPasswordException;
 	public List<UserDto> getUser();
-	public Appointment makeAppointment(Appointment appointment)throws IdNotFoundException,IdNotFoundException, IdAlreadyExistException;
+	public Appointment makeAppointment(Appointment appointment)throws IdNotFoundException, IdAlreadyExistException;
 	public String approveAppointment(String userId, String diagnosticCenterId) throws InvalidUserException, IdNotFoundException;
 	public String checkStatus(int appointmentId)throws IdNotFoundException;
 	public String cancelAppointment(int appointmentId) throws IdNotFoundException;
