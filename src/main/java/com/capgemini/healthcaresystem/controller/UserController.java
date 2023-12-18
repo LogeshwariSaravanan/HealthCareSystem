@@ -25,7 +25,7 @@ import com.capgemini.healthcaresystem.exception.InvalidUserNameException;
 import com.capgemini.healthcaresystem.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 	@Autowired
 	UserService userService;

@@ -15,7 +15,7 @@ import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.service.DiagnosticCenterService;
 
 @RestController
-@RequestMapping("/api/diagnosticcenter")
+@RequestMapping("/api/v1/diagnosticcenter")
 public class DiagnosticCenterController {
 	@Autowired
 	DiagnosticCenterService diagnosticCenterService;

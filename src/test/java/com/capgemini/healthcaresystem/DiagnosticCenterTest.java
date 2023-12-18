@@ -155,31 +155,41 @@ public class DiagnosticCenterTest {
         assertNotNull(result);
         // Add more assertions as needed based on the expected behavior of the method
     }
-
 	
-//	@Test
-//	public void addCenterTest() throws IdNotFoundException, InvalidUserException, IdAlreadyExistException
-//	{
-//		String userId="1";
-//		
-//		User user = new User("1", "loghjj", "pass", BigInteger.valueOf(8786767575L), "admin","abc@gmail.com" ,45, "male");
-//		
-//		 List<Tests> tests = new ArrayList<Tests>();
-//		   tests.add(new Tests( "BT01", "blood test"));
-//		   tests.add(new Tests( "BT02", "sugar test"));
-//		   
-//		   
-//			when(userRepository.findById(userId).get()).thenReturn(user);
-//
-//		
-//		DiagnosticCenter diagnosticCenter = new DiagnosticCenter("dd", "applo",BigInteger.valueOf(667777888L), "btm", tests);
-//	
-//		
-//		 when(diagnosticCenterRepository.save(diagnosticCenter)).thenReturn(diagnosticCenter);
-//		 
-//		 assertEquals(diagnosticCenter.getAddress(), diagnosticCenterServiceImpl.addCenter("1", diagnosticCenter).getAddress());
-//		
-//	}
+	
+	// Mock user@Test
+    public void testAddTest() throws IdNotFoundException, InvalidUserException, IdAlreadyExistException {
+    	User adminUser = new User();
+        adminUser.setUserId("admin123");
+        adminUser.setUserRole("Admin");
+
+        // Mock diagnostic center
+        DiagnosticCenter diagnosticCenter = new DiagnosticCenter();
+        diagnosticCenter.setCenterId("center123");
+
+        // Mock test
+        Tests test = new Tests();
+        test.setTestid("test123");
+
+        // Mock model mapping
+        DiagnosticCenterDto diagnosticCenterDto = new DiagnosticCenterDto();
+        diagnosticCenterDto.setCenterId("center123");
+
+        // Mock repository calls
+        when(userRepository.findById("admin123")).thenReturn(Optional.of(adminUser));
+        when(diagnosticCenterRepository.findById("center123")).thenReturn(Optional.of(diagnosticCenter));
+        when(testRepository.findById("test123")).thenReturn(Optional.of(test));
+        when(testRepository.findAllTestId()).thenReturn(List.of("test123"));
+        when(centerTestMappingRepository.findTestByCenter(diagnosticCenter)).thenReturn(new ArrayList<>());
+        when(modelMapper.map(diagnosticCenter, DiagnosticCenterDto.class)).thenReturn(diagnosticCenterDto);
+        DiagnosticCenterDto result = diagnosticCenterServiceImpl.addTest("admin123", "center123", "test123");
+
+        assertNotNull(result);
+        assertEquals("center123", result.getCenterId());
+        // Add more assertions based on the expected behavior of your method
+    }
+
+    
 	
 	
 	
