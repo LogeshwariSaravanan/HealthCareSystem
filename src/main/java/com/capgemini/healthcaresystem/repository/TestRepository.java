@@ -15,12 +15,10 @@ import jakarta.transaction.Transactional;
 public interface TestRepository extends JpaRepository<Tests, String> {
 	
 	@Transactional
-	@Modifying
 	@Query("SELECT t.testName FROM Tests t")
 	List<String> findTest();
 
 	@Transactional
-	@Modifying
 	@Query("SELECT t.testid FROM Tests t")
 	List<String> findAllTestId();
 

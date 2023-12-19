@@ -17,7 +17,6 @@ public interface CenterTestMappingRepository extends JpaRepository<CenterTestMap
 	List<CenterTestMapping> findBydiagnosticCenter(DiagnosticCenter diagnosticCenter);
 		
 	@Transactional
-	@Modifying
 	@Query("SELECT c.test FROM CenterTestMapping c WHERE c.diagnosticCenter=?1")
 	List<Tests> findTestByCenter(DiagnosticCenter diagnosticCenter);
 	

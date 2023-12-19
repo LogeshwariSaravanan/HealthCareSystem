@@ -16,7 +16,6 @@ import jakarta.transaction.Transactional;
 public interface DiagnosticCenterRepository extends JpaRepository<DiagnosticCenter, String> {
 
 	@Transactional
-	@Modifying
 	@Query("SELECT d.contactNo FROM DiagnosticCenter d")
 	List<BigInteger> findAllCenterByContactNo();
 	

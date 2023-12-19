@@ -29,19 +29,16 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, Integ
 	
 	
 	@Transactional
-	@Modifying
 	@Query("SELECT a.diagnosticCenter FROM Appointment a")
 	List<DiagnosticCenter> findDiagnosticCenter();
 	
 	@Transactional
-	@Modifying
 	@Query("SELECT a.test FROM Appointment a")
 	List<Tests> findTest();
 	
 	
 	
 	@Transactional
-	@Modifying
 	@Query("SELECT a.user FROM Appointment a")
 	List<User> findUser();
 	

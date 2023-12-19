@@ -57,7 +57,8 @@ public class UserServiceImpl implements UserService {
         	String passwordRegex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,14}$";
         	if(user.getUserPassword().matches(passwordRegex)) {
         		if(user.getContactNo().toString().length() == 10) {
-        			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+//        			String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        			String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         			if(user.getUserEmail().matches(emailRegex)) {
         				List<BigInteger> ListOfUserContactNo=userRepository.findAllUserByContactNo();
         				if(!ListOfUserContactNo.contains(user.getContactNo())) {
