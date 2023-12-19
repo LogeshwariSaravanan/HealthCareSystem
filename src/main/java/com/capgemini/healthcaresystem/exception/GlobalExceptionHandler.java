@@ -78,5 +78,14 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
 	}
 	
+	@ExceptionHandler(InvalidDateException.class)
+	public ResponseEntity<ErrorInfo> handleInvalidDate(InvalidDateException invalidDateException){
+		ErrorInfo errorInfo=new ErrorInfo();
+		errorInfo.setErrorMessage(invalidDateException.getMsg());
+		errorInfo.setHttpStatus(HttpStatus.NOT_FOUND.toString());
+		errorInfo.setLocalDateTime(LocalDateTime.now());
+		return new ResponseEntity<ErrorInfo>(errorInfo,HttpStatus.NOT_FOUND);
+	}
+	
 }
 

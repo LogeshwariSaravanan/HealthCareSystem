@@ -1,6 +1,7 @@
 package com.capgemini.healthcaresystem.service;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
+import com.capgemini.healthcaresystem.exception.InvalidDateException;
 import com.capgemini.healthcaresystem.exception.InvalidEmailIdException;
 import com.capgemini.healthcaresystem.exception.InvalidPasswordException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
@@ -124,7 +126,7 @@ public class UserServiceImpl implements UserService {
 	
 	
 	@Override
-	public Appointment makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
+	public Appointment makeAppointment(Appointment appointment) throws IdNotFoundException, IdAlreadyExistException, InvalidDateException {
 		Optional<User> userOptional=userRepository.findById(appointment.getUser().getUserId());
 		if(userOptional.isEmpty())
 		{
@@ -148,8 +150,13 @@ public class UserServiceImpl implements UserService {
 					  if(listOfTest.contains(test)) 
 					  {
 						  appointment.setTest(test);
-						 return appointmentRepository.save(appointment);
-									
+						  LocalDateTime currentDateTime = LocalDateTime.now();
+					        if (appointment.getDateAndTime().isAfter(currentDateTime)) {
+								 return appointmentRepository.save(appointment);
+					        }
+					        else {
+					        	throw new InvalidDateException("Please select the upcoming dates");
+					        }									
 					  }
 					  else 
 					  {
@@ -160,8 +167,6 @@ public class UserServiceImpl implements UserService {
 				  {
 					  throw new IdNotFoundException("No such test exist");
 				  }
-				 
-				  
 			  }
 			  else 
 			  {

@@ -18,6 +18,7 @@ import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
 import com.capgemini.healthcaresystem.exception.InvalidContactNumberException;
+import com.capgemini.healthcaresystem.exception.InvalidDateException;
 import com.capgemini.healthcaresystem.exception.InvalidEmailIdException;
 import com.capgemini.healthcaresystem.exception.InvalidPasswordException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
@@ -46,10 +47,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/makeappointment")
-	public Appointment makeAppointment(@RequestBody Appointment appointment) throws IdNotFoundException, IdAlreadyExistException {
+	public Appointment makeAppointment(@RequestBody Appointment appointment) throws IdNotFoundException, IdAlreadyExistException,InvalidDateException {
 		return userService.makeAppointment(appointment);
 	}
-
 
 	@PutMapping("/approveappointment/{userid}/{diagnosticcenterId}")
 	public String approveAppointment(@PathVariable (value="userid") String userId, @PathVariable (value="diagnosticcenterId")String diagnosticCenterId ) throws InvalidUserException,IdNotFoundException{

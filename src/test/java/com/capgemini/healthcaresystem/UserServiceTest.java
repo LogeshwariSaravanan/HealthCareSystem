@@ -29,6 +29,7 @@ import com.capgemini.healthcaresystem.entity.Tests;
 import com.capgemini.healthcaresystem.entity.User;
 import com.capgemini.healthcaresystem.exception.IdAlreadyExistException;
 import com.capgemini.healthcaresystem.exception.IdNotFoundException;
+import com.capgemini.healthcaresystem.exception.InvalidDateException;
 import com.capgemini.healthcaresystem.exception.InvalidUserException;
 import com.capgemini.healthcaresystem.repository.AppointmentRepository;
 import com.capgemini.healthcaresystem.repository.CenterTestMappingRepository;
@@ -152,12 +153,12 @@ public class UserServiceTest {
     
   
     @Test
-    void makeAppointmentTest() throws IdNotFoundException, IdAlreadyExistException {
+    void makeAppointmentTest() throws IdNotFoundException, IdAlreadyExistException, InvalidDateException {
         // Mock data
         User user = new User("Log123","Logeshwari","log@123",BigInteger.valueOf(8786767575L),"Customer","logi@gmail.com",20,"female");
         DiagnosticCenter diagnosticCenter = new DiagnosticCenter("che123", "apollo",BigInteger.valueOf(8786767574L) ,"Chennai");
         Tests test = new Tests("B123","Blood Test");
-        Appointment appointment = new Appointment(BigInteger.valueOf(1L),LocalDateTime.now(),false,test,user,diagnosticCenter);
+        Appointment appointment = new Appointment(BigInteger.valueOf(1L),LocalDateTime.now().plusDays(1),false,test,user,diagnosticCenter);
         appointment.setUser(user);
         appointment.setDiagnosticCenter(diagnosticCenter);
         appointment.setTest(test);
@@ -199,6 +200,23 @@ public class UserServiceTest {
         // Assert the result
         assertEquals("No appointments to approve in center " + diagnosticCenterId, result);
     }
+    
+    @Test
+    void cancelAppointment_shouldCancelAppointment() throws IdNotFoundException {
+        // Mock appointmentId
+        int appointmentId = 1;
+
+        // Mock repository behavior
+        when(appointmentRepository.existsById(appointmentId)).thenReturn(true);
+
+        // Test the service method
+        String result = userServiceImpl.cancelAppointment(appointmentId);
+
+        // Verify the result using assertEquals
+        assertEquals("Appointment id : " + appointmentId + " cancelled successfully", result);
+    }
+    
+   
 }
     
    
